@@ -1,0 +1,21 @@
+add_paths (NATIVE_SRCS
+  math.cpp
+  midi_in.cpp
+  oscillator.cpp
+  piano.cpp
+  pitch_bend.cpp
+  sink.cpp
+  collapse.cpp
+  iir_filter.cpp
+  noise.cpp
+  midi_control.cpp
+  midi_trigger.cpp
+  sampler.cpp
+  clock.cpp
+  toggle.cpp
+  trigger_envelope.cpp
+  trigger_sequencer.cpp
+  microphone.cpp
+  delay.cpp
+  random_access_delay.cpp
+)
