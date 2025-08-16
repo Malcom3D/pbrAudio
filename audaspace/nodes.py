@@ -1,10 +1,27 @@
 import bpy
 import aud
-from bpy.types import Node, Operator
+from bpy.types import Node, NodeSocket, Operator
 from bpy.props import PointerProperty, StringProperty, FloatProperty
 from bpy.utils import register_class, unregister_class
 
 classes = []
+
+class NodeSocketSound(NodeSocket):
+    """Custom NodeSocket for streaming audio between audaspace 3DHandle and 3DDevice nodes."""
+
+    bl_idname = 'NodeSocketSound'
+    bl_label = 'Sound Socket'
+
+    def init(self, context):
+        self.display_shape = 'CIRCLE'
+
+    def draw(self, context, layout, node, text):
+        layout.label(text=text if text else "Sound")
+
+    def draw_color(self, context, node):
+        return (0.8, 0.2, 0.6, 1.0)  # Pinkish color for sound sockets
+
+classes.append(NodeSocketSound)
 
 class audPlaySound(bpy.types.Operator):
     """Play audio file"""
@@ -54,7 +71,7 @@ class audPlayBack(Node):
     )
     
     def init(self, context):
-        self.outputs.new('NodeSocketFloat', "Audio Output")
+        self.outputs.new('NodeSocketSound', "Audio Output")
     
     def draw_buttons(self, context, layout):
         layout.prop(self, "filepath")
@@ -67,6 +84,61 @@ class audPlayBack(Node):
         pass
 
 classes.append(audPlayBack)
+
+class aud3DOutput(Node):
+    """A custom node that outputs audio with 3D spatialization based on an object's transform."""
+    bl_idname = 'audaspace.3doutput'
+    bl_label = 'Spatialized Output'
+    bl_icon = 'SOUND'
+
+    # Property to store the selected object
+    target_object: PointerProperty(
+        name="Target Object",
+        type=bpy.types.Object,
+        description="The object whose position and orientation will be used for spatialization"
+    )
+
+    def init(self, context):
+        """Initialize the node with an input socket."""
+        self.inputs.new('NodeSocketSound', "Input")
+
+    def update(self):
+        """Update the node's output based on the input and object transform."""
+        if not self.inputs[0].is_linked:
+            return
+
+        input_sound = self.inputs[0].links[0].from_socket.default_value
+        if not input_sound:
+            return
+
+        if not self.target_object:
+            return
+
+        # Get the object's location and rotation
+        location = self.target_object.location
+        rotation = self.target_object.rotation_euler
+
+        # Create a 3D handle for spatialization
+        handle = aud.I3DHandle(input_sound)
+        handle.position = location
+        handle.orientation = rotation
+
+        # Play the sound (or pass it to the next node if needed)
+        # In a real implementation, you might want to return the handle or play it directly
+        # For now, we just store it in the node
+        self.sound_handle = handle
+
+    def free(self):
+        """Clean up when the node is removed."""
+        if hasattr(self, 'sound_handle'):
+            self.sound_handle.stop()
+            del self.sound_handle
+
+    def draw_buttons(self, context, layout):
+        """Draw the UI elements for the node."""
+        layout.prop(self, "target_object")
+
+classes.append(aud3DOutput)
 
 class audPlay3DSound(Operator):
     """Play 3D Audio"""
@@ -197,3 +269,123 @@ class aud3DplayBackNode(Node):
             self.sound_handle = None
 
 classes.append(aud3DplayBackNode)
+
+class AUD_OT_add_spatialization_node(bpy.types.Operator):
+    """Add a spatialization audio node"""
+    bl_idname = "aud.add_spatialization_node"
+    bl_label = "Add Spatialization Node"
+   
+    def execute(self, context):
+        if not context.space_data.edit_tree:
+            return {'CANCELLED'}
+
+        tree = context.space_data.edit_tree
+        node = tree.nodes.new('SpatializationNode')
+        return {'FINISHED'}
+
+classes.append(AUD_OT_add_spatialization_node)
+
+class SpatializationNode(bpy.types.Node):
+    """Audio spatialization node based on 3D object position"""
+    bl_idname = 'audaspace.SpatializationNode'
+    bl_label = 'Spatialization'
+    bl_icon = 'SOUND'
+   
+    # Properties
+    object_ref: PointerProperty(
+        name="Object",
+        type=bpy.types.Object,
+        description="Object to track for spatialization"
+    )
+   
+    distance_max: FloatProperty(
+        name="Max Distance",
+        default=25.0,
+        min=0.1,
+        max=1000.0,
+        description="Maximum distance for audio attenuation"
+    )
+   
+    distance_reference: FloatProperty(
+        name="Reference Distance",
+        default=1.0,
+        min=0.1,
+        max=100.0,
+        description="Distance where volume is not attenuated"
+    )
+   
+    rolloff_factor: FloatProperty(
+        name="Rolloff Factor",
+        default=1.0,
+        min=0.1,
+        max=10.0,
+        description="How quickly sound attenuates with distance"
+    )
+
+    def init(self, context):
+        """Initialize the node"""
+        self.inputs.new('NodeSocketSound', "Sound")
+        self.outputs.new('NodeSocketSound', "Sound")
+
+    def draw_buttons(self, context, layout):
+        """Draw node properties"""
+        layout.prop(self, "object_ref")
+        layout.prop(self, "distance_max")
+        layout.prop(self, "distance_reference")
+        layout.prop(self, "rolloff_factor")
+
+    def draw_buttons_ext(self, context, layout):
+        """Draw additional node properties"""
+        self.draw_buttons(context, layout)
+
+    def get_settings(self):
+        """Get spatialization settings"""
+        return {
+            'distance_max': self.distance_max,
+            'distance_reference': self.distance_reference,
+            'rolloff_factor': self.rolloff_factor,
+            'object': self.object_ref
+        }
+
+    def create_spatializer(self, i3ddevice, factory, settings):
+        """Create the spatialization effect"""
+        if not settings['object']:
+            return factory
+
+        # Get object location and orientation
+        loc = settings['object'].location
+        rot = settings['object'].rotation_euler
+
+        # Create 3D sound effect
+        effect = aud.Sound3D(
+            factory,
+            aud.Vector3(loc.x, loc.z, loc.y),  # Note: Blender's Z is up, audaspace's Y is up
+            aud.Vector3(0, 0, 0),  # Velocity (not used here)
+            aud.Vector3(math.sin(rot.z), 0, math.cos(rot.z)),  # Orientation (simplified)
+            settings['distance_max'],
+            settings['distance_reference'],
+            settings['rolloff_factor']
+        )
+
+        return effect
+
+    def evaluate(self):
+        """Evaluate the node's output"""
+        if not self.inputs[0].is_linked:
+            return None
+
+        input_node = self.inputs[0].links[0].from_node
+        sound = input_node.evaluate()
+
+        if sound is None:
+            return None
+
+        settings = self.get_settings()
+        device = aud.Device()
+
+        # Create spatialized sound
+        spatial_sound = self.create_spatializer(device, sound, settings)
+
+        return spatial_sound
+
+classes.append(SpatializationNode)

@@ -50,8 +50,8 @@ classes.append(MidiSocket)
 
 class TriggerOperator(Operator):
     '''One-off trigger'''
-    #bl_idname = 'audionodes.trigger'
-    bl_idname = 'audio.trigger'
+    bl_idname = 'audionodes.trigger'
+    #bl_idname = 'audio.trigger'
     bl_label = "Trigger"
 
     @classmethod
@@ -66,8 +66,8 @@ classes.append(TriggerOperator)
 
 class TriggerResetOperator(Operator):
     '''One-off trigger reset'''
-    #bl_idname = 'audionodes.trigger_reset'
-    bl_idname = 'audio.trigger_reset'
+    bl_idname = 'audionodes.trigger_reset'
+    #bl_idname = 'audio.trigger_reset'
     bl_label = "Reset"
 
     @classmethod
@@ -90,10 +90,10 @@ class TriggerSocket(NodeSocket, AudioTreeNodeSocket):
             layout.label(text=text)
         else:
             row = layout.row(align=True)
-            #row.operator(operator="audionodes.trigger", text=text)
-            #row.operator(operator="audionodes.trigger_reset", text="", icon='FILE_REFRESH')
-            row.operator(operator="audio.trigger", text=text)
-            row.operator(operator="audio.trigger_reset", text="", icon='FILE_REFRESH')
+            row.operator(operator="audionodes.trigger", text=text)
+            row.operator(operator="audionodes.trigger_reset", text="", icon='FILE_REFRESH')
+            #row.operator(operator="audio.trigger", text=text)
+            #row.operator(operator="audio.trigger_reset", text="", icon='FILE_REFRESH')
 
     def draw_color(self, context, node):
         return (0.52734375, 0.99609375, 0.87109375, 1.0)

@@ -10,6 +10,8 @@ node_categories = [
     pbrAudioNodeCategory("AUD_NODES", "AudaSpace", items=[
         NodeItem("audaspace.playback"),
         NodeItem("audaspace.3dplayback"),
+        NodeItem("audaspace.3doutput"),
+        NodeItem("audaspace.SpatializationNode"),
     ]),
 ]
 
