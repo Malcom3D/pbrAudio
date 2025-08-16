@@ -1,11 +1,15 @@
 import bpy
 import nodeitems_utils
+from bpy.types import Node, Operator
 from bpy.utils import register_class, unregister_class
+from bpy.props import PointerProperty, StringProperty, FloatProperty
 from nodeitems_utils import NodeCategory, NodeItem, register_node_categories, unregister_node_categories
 from ..pbrAudioNodeTree import pbrAudioNodeCategory
 
 node_categories = [
-    pbrAudioNodeCategory("AUD_NODES", "AudaSpace", items=[NodeItem("audPlayBackNode"),
+    pbrAudioNodeCategory("AUD_NODES", "AudaSpace", items=[
+        NodeItem("audaspace.playback"),
+        NodeItem("audaspace.3dplayback"),
     ]),
 ]
 
