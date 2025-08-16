@@ -1,5 +1,5 @@
 # pbrAudio
-Physically based rendered sound and auralization for Blender using nomelif/Audionodes AddOn as starting point.
+Physically based rendered sound and auralization for Blender (4.5.1 LTS and later LTS) using nomelif/Audionodes AddOn as starting point.
 
 Some reference task [not confirmed]:
 - https://graphics.stanford.edu/projects/wavesolver/assets/wavesolver2018_opt.pdf as white paper resources
