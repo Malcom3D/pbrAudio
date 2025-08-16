@@ -1,7 +1,7 @@
 
 import bpy
 from bpy.types import Node, Operator, PropertyGroup
-from .node_tree import pbrAudioTreeNode
+from .node_tree import AudioTreeNode
 
 classes = []
 
@@ -38,7 +38,7 @@ midi_conf_option_descriptions = {
 class MidiConfOperator(Operator):
     """MIDI Configuration popup for MidiInNode"""
     #bl_idname = 'audionodes.configure_midi'
-    bl_idname = 'pbraudio.configure_midi'
+    bl_idname = 'audio.configure_midi'
     bl_label = "MIDI Configuration"
 
     driver: bpy.props.EnumProperty(
@@ -126,7 +126,7 @@ class MidiConfOperator(Operator):
 
 classes.append(MidiConfOperator)
 
-class MidiIn(Node, pbrAudioTreeNode):
+class MidiIn(Node, AudioTreeNode):
     bl_idname = 'MidiInNode'
     bl_label = 'MIDI input'
 
@@ -143,12 +143,12 @@ class MidiIn(Node, pbrAudioTreeNode):
         if context: context.area.tag_redraw()
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self["conf_attempted"] = False
         self.apply_conf()
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self["conf_attempted"] = False
         self.init_conf()
         self.apply_conf(context)
@@ -156,7 +156,7 @@ class MidiIn(Node, pbrAudioTreeNode):
 
     def draw_buttons(self, context, layout):
         #layout.operator(operator="audionodes.configure_midi", text="Configure MIDI")
-        layout.operator(operator="pbraudio.configure_midi", text="Configure MIDI")
+        layout.operator(operator="audio.configure_midi", text="Configure MIDI")
         if "conf_fail" in self and self["conf_fail"]:
             layout.label(text="Configuration failed", icon='ERROR')
 

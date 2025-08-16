@@ -1,4 +1,3 @@
-
 import bpy
 from bpy.types import NodeTree, Node, NodeSocket, Operator
 
@@ -6,62 +5,8 @@ from . import ffi
 
 classes = []
 
-class pbrAudioTree(NodeTree):
-
-    '''Node tree for audio mixer'''
-
-    bl_idname = 'pbrAudioTreeType'
-    bl_label = 'pbrAudio Node Editor'
-    bl_icon = 'PLAY_SOUND'
-
-    def init(self):
-        pass
-
-    def update(self):
-        # Blender likes to call this method when loading isn't yet finished,
-        # don't do anything in that case
-        if ffi.flag_loading_file:
-            return
-        ffi.begin_tree_update()
-        for link in self.links:
-            if link.to_node.bl_idname == "NodeReroute":
-                continue
-            from_node, from_socket = link.from_node, link.from_socket
-            to_node, to_socket = link.to_node, link.to_socket
-            connected = True
-            while from_node.bl_idname == "NodeReroute":
-                if not from_node.inputs[0].is_linked:
-                    connected = False
-                    break
-                # TODO: socket.links is slow
-                new_link = from_node.inputs[0].links[0]
-                from_node, from_socket = new_link.from_node, new_link.from_socket
-            if not connected:
-                continue
-            from_node.check_revive()
-            to_node.check_revive()
-            ffi.add_tree_update_link(from_node.get_uid(), to_node.get_uid(), from_socket.get_index(), to_socket.get_index())
-        ffi.finish_tree_update()
-
-    def post_load_handler(self):
-        # Clear unique_ids first in case something goes wrong while initiailizing nodes
-        for node in self.nodes:
-            if isinstance(node, pbrAudioTreeNode):
-                node["unique_id"] = -1
-        for node in self.nodes:
-            if isinstance(node, pbrAudioTreeNode):
-                node.reinit()
-        self.update()
-
-    def refresh_all_uid_cache(self):
-        for i, node in enumerate(self.nodes):
-            if isinstance(node, pbrAudioTreeNode):
-                node.refresh_uid_cache(i)
-
-classes.append(pbrAudioTree)
-
 # Custom socket type (mixin)
-class pbrAudioTreeNodeSocket:
+class AudioTreeNodeSocket:
     def get_tree(self):
         return self.id_data
 
@@ -69,7 +14,7 @@ class pbrAudioTreeNodeSocket:
         # TODO: store index in property?
         return int(self.path_from_id().split('[')[-1][:-1])
 
-class RawAudioSocket(NodeSocket, pbrAudioTreeNodeSocket):
+class RawAudioSocket(NodeSocket, AudioTreeNodeSocket):
     '''Socket for raw audio'''
     bl_idname = 'RawAudioSocketType'
     bl_label = 'Raw Audio'
@@ -90,7 +35,7 @@ class RawAudioSocket(NodeSocket, pbrAudioTreeNodeSocket):
 
 classes.append(RawAudioSocket)
 
-class MidiSocket(NodeSocket, pbrAudioTreeNodeSocket):
+class MidiSocket(NodeSocket, AudioTreeNodeSocket):
     '''Socket for MIDI events'''
     bl_idname = 'MidiSocketType'
     bl_label = 'MIDI'
@@ -106,7 +51,7 @@ classes.append(MidiSocket)
 class TriggerOperator(Operator):
     '''One-off trigger'''
     #bl_idname = 'audionodes.trigger'
-    bl_idname = 'pbraudio.trigger'
+    bl_idname = 'audio.trigger'
     bl_label = "Trigger"
 
     @classmethod
@@ -122,7 +67,7 @@ classes.append(TriggerOperator)
 class TriggerResetOperator(Operator):
     '''One-off trigger reset'''
     #bl_idname = 'audionodes.trigger_reset'
-    bl_idname = 'pbraudio.trigger_reset'
+    bl_idname = 'audio.trigger_reset'
     bl_label = "Reset"
 
     @classmethod
@@ -135,7 +80,7 @@ class TriggerResetOperator(Operator):
 
 classes.append(TriggerResetOperator)
 
-class TriggerSocket(NodeSocket, pbrAudioTreeNodeSocket):
+class TriggerSocket(NodeSocket, AudioTreeNodeSocket):
     '''Socket for trigger events'''
     bl_idname = 'TriggerSocketType'
     bl_label = 'Trigger'
@@ -147,8 +92,8 @@ class TriggerSocket(NodeSocket, pbrAudioTreeNodeSocket):
             row = layout.row(align=True)
             #row.operator(operator="audionodes.trigger", text=text)
             #row.operator(operator="audionodes.trigger_reset", text="", icon='FILE_REFRESH')
-            row.operator(operator="pbraudio.trigger", text=text)
-            row.operator(operator="pbraudio.trigger_reset", text="", icon='FILE_REFRESH')
+            row.operator(operator="audio.trigger", text=text)
+            row.operator(operator="audio.trigger_reset", text="", icon='FILE_REFRESH')
 
     def draw_color(self, context, node):
         return (0.52734375, 0.99609375, 0.87109375, 1.0)
@@ -157,12 +102,12 @@ classes.append(TriggerSocket)
 
 # Mix-in class for all custom nodes in this tree type.
 # Defines a poll function to enable instantiation.
-class pbrAudioTreeNode:
+class AudioTreeNode:
     bl_icon = 'SOUND'
 
     @classmethod
     def poll(cls, ntree):
-        return ntree.bl_idname == 'pbrAudioTreeType'
+        return ntree.bl_idname == 'AudioTreeType'
 
     def get_tree(self):
         return self.id_data
@@ -243,7 +188,7 @@ class pbrAudioTreeNode:
             # NodeTree has been deleted.
             del cls.uid_to_path[uid]
             return
-        if path[1] >= len(nodes) or not isinstance(nodes[path[1]], pbrAudioTreeNode) or nodes[path[1]].get_uid() != uid:
+        if path[1] >= len(nodes) or not isinstance(nodes[path[1]], AudioTreeNode) or nodes[path[1]].get_uid() != uid:
             del cls.uid_to_path[uid]
             if not retry:
                 path[0].refresh_all_uid_cache()

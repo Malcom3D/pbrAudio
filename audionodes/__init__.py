@@ -2,11 +2,7 @@ from . import ffi
 
 import nodeitems_utils
 from nodeitems_utils import NodeCategory, NodeItem
-
-class pbrAudioNodeCategory(NodeCategory):
-    @classmethod
-    def poll(cls, context):
-        return context.space_data.tree_type == 'pbrAudioTreeType'
+from ..pbrAudioNodeTree import pbrAudioNodeCategory
 
 node_categories = [
     pbrAudioNodeCategory("AUDIO_OUT", "Audio output", items=[
@@ -72,7 +68,7 @@ def register():
 
 def unregister():
     timers.unregister(handle_messages)
-    #nodeitems_utils.unregister_node_categories("PBRAUDIO")
+    #nodeitems_utils.unregister_node_categories("AUDIONODES")
     nodeitems_utils.unregister_node_categories("PBRAUDIO")
     for cls in reversed(classes):
         unregister_class(cls)

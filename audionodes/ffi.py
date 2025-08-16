@@ -10,7 +10,7 @@ native_fname = {
 }[platform.system()]
 native_path = os.path.normpath(os.path.join(os.path.dirname(__file__), native_fname))
 if not os.path.isfile(native_path):
-    raise AssertionError("""pbrAudio: Unable to locate the native backend shared library.
+    raise AssertionError("""AudioNodes: Unable to locate the native backend shared library.
 Expected to find it at %s.
 NOTE: The addon will not work if you download a raw repository-zip, \
 because the native backend needs to be compiled.

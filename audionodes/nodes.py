@@ -1,11 +1,11 @@
 
 import bpy
 from bpy.types import Node
-from .node_tree import pbrAudioTreeNode
+from .node_tree import AudioTreeNode
 
 classes = []
 
-class Oscillator(Node, pbrAudioTreeNode):
+class Oscillator(Node, AudioTreeNode):
     bl_idname = 'OscillatorNode'
     bl_label = 'Oscillator'
 
@@ -14,7 +14,7 @@ class Oscillator(Node, pbrAudioTreeNode):
         self.send_property_update(1, self.anti_alias_check)
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.change_func(None)
 
     func_enum_items = [
@@ -37,7 +37,7 @@ class Oscillator(Node, pbrAudioTreeNode):
     )
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Frequency (Hz)")
         self.inputs.new('RawAudioSocketType', "Amplitude")
         self.inputs[-1].value_prop = 1.0
@@ -53,7 +53,7 @@ class Oscillator(Node, pbrAudioTreeNode):
 
 classes.append(Oscillator)
 
-class Math(Node, pbrAudioTreeNode):
+class Math(Node, AudioTreeNode):
     bl_idname = 'MathNode'
     bl_label = 'Math'
 
@@ -61,7 +61,7 @@ class Math(Node, pbrAudioTreeNode):
         self.send_property_update(0, self.func_enum_to_native[self.func_enum])
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.change_func(None)
 
     func_enum_items = [
@@ -94,7 +94,7 @@ class Math(Node, pbrAudioTreeNode):
     )
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Audio")
         self.inputs.new('RawAudioSocketType', "Audio")
         self.outputs.new('RawAudioSocketType', "Result")
@@ -104,12 +104,12 @@ class Math(Node, pbrAudioTreeNode):
 
 classes.append(Math)
 
-class Piano(Node, pbrAudioTreeNode):
+class Piano(Node, AudioTreeNode):
     bl_idname = 'PianoNode'
     bl_label = 'Piano'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('MidiSocketType', "MIDI")
         self.inputs.new('RawAudioSocketType', "Decay time")
         self.outputs.new('RawAudioSocketType', "Frequency")
@@ -119,17 +119,17 @@ class Piano(Node, pbrAudioTreeNode):
 
 classes.append(Piano)
 
-class Microphone(Node, pbrAudioTreeNode):
+class Microphone(Node, AudioTreeNode):
     bl_idname = 'MicrophoneNode'
     bl_label = 'Microphone'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.outputs.new('RawAudioSocketType', "Input stream")
 
 classes.append(Microphone)
 
-class MidiTrigger(Node, pbrAudioTreeNode):
+class MidiTrigger(Node, AudioTreeNode):
     bl_idname = 'MidiTriggerNode'
     bl_label = 'MIDI Trigger'
 
@@ -138,7 +138,7 @@ class MidiTrigger(Node, pbrAudioTreeNode):
         self.send_property_update(1, self.modes_to_native[self.interfaceType])
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.update_props(None)
 
     channel: bpy.props.IntProperty(name="Control", min=0, max=127, default=1, update=update_props)
@@ -158,14 +158,14 @@ class MidiTrigger(Node, pbrAudioTreeNode):
 
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('MidiSocketType', "MIDI")
         self.outputs.new('TriggerSocketType', "Trigger")
         self.update_props(None)
 
 classes.append(MidiTrigger)
 
-class Sampler(Node, pbrAudioTreeNode):
+class Sampler(Node, AudioTreeNode):
     bl_idname = 'SamplerNode'
     bl_label = 'Sampler'
 
@@ -191,7 +191,7 @@ class Sampler(Node, pbrAudioTreeNode):
     modes_to_native = { item[0]: item[3] for item in modes }
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.update_props(None)
         self.send_sound(None)
 
@@ -202,19 +202,19 @@ class Sampler(Node, pbrAudioTreeNode):
         layout.prop(self, "mode", text="Mode")
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('TriggerSocketType', "Trigger")
         self.outputs.new('RawAudioSocketType', "Audio")
         self.update_props(None)
 
 classes.append(Sampler)
 
-class Clock(Node, pbrAudioTreeNode):
+class Clock(Node, AudioTreeNode):
     bl_idname = 'ClockNode'
     bl_label = 'Clock'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Rate (BPM)")
         self.inputs[-1].value_prop = 120
         self.inputs.new('TriggerSocketType', "Run/stop")
@@ -222,12 +222,12 @@ class Clock(Node, pbrAudioTreeNode):
 
 classes.append(Clock)
 
-class TriggerEnvelope(Node, pbrAudioTreeNode):
+class TriggerEnvelope(Node, AudioTreeNode):
     bl_idname = 'TriggerEnvelopeNode'
     bl_label = 'Trigger Envelope'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('TriggerSocketType', "Trigger")
         self.inputs.new('RawAudioSocketType', "Delay time")
         self.inputs.new('RawAudioSocketType', "Attack time")
@@ -246,12 +246,12 @@ class TriggerEnvelope(Node, pbrAudioTreeNode):
 
 classes.append(TriggerEnvelope)
 
-class Toggle(Node, pbrAudioTreeNode):
+class Toggle(Node, AudioTreeNode):
     bl_idname = 'ToggleNode'
     bl_label = 'Toggle'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('TriggerSocketType', "Trigger")
         self.inputs.new('RawAudioSocketType', "A")
         self.inputs.new('RawAudioSocketType', "B")
@@ -266,7 +266,7 @@ class TriggerSequencerList(bpy.types.PropertyGroup):
     __annotations__ = {f"step{i}": bpy.props.BoolProperty(name=f"Step {i+1}", update=trigger_sequencer_list_update) for i in range(SEQUENCER_MAX_STEPS)}
 classes.append(TriggerSequencerList)
 
-class TriggerSequencer(Node, pbrAudioTreeNode):
+class TriggerSequencer(Node, AudioTreeNode):
     bl_idname = 'TriggerSequencerNode'
     bl_label = 'Trigger Sequencer'
     bl_width_min = 70.0
@@ -283,13 +283,13 @@ class TriggerSequencer(Node, pbrAudioTreeNode):
     current_step: bpy.props.IntProperty(default=0)
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('TriggerSocketType', "Trigger")
         self.outputs.new('TriggerSocketType', "Trigger")
         self.change_list(None)
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.change_list(None)
 
     def receive_message(self, slot, value):
@@ -312,12 +312,12 @@ class TriggerSequencer(Node, pbrAudioTreeNode):
 
 classes.append(TriggerSequencer)
 
-class Delay(Node, pbrAudioTreeNode):
+class Delay(Node, AudioTreeNode):
     bl_idname = 'DelayNode'
     bl_label = 'Delay'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Audio")
         self.inputs.new('RawAudioSocketType', "Delay time (s)")
         self.inputs[1].value_prop = 1
@@ -326,7 +326,7 @@ class Delay(Node, pbrAudioTreeNode):
 
 classes.append(Delay)
 
-class RandomAccessDelay(Node, pbrAudioTreeNode):
+class RandomAccessDelay(Node, AudioTreeNode):
     bl_idname = 'RandomAccessDelayNode'
     bl_label = 'Random Access Delay'
 
@@ -334,7 +334,7 @@ class RandomAccessDelay(Node, pbrAudioTreeNode):
         self.send_property_update(0, self.buffer_length)
     
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.change_buffer(None)
     
     buffer_length: bpy.props.IntProperty(
@@ -343,7 +343,7 @@ class RandomAccessDelay(Node, pbrAudioTreeNode):
     )
     
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Audio")
         self.inputs.new('RawAudioSocketType', "Delay time (s)")
         self.inputs[1].value_prop = 1
@@ -355,18 +355,18 @@ class RandomAccessDelay(Node, pbrAudioTreeNode):
 
 classes.append(RandomAccessDelay)
 
-class PitchBend(Node, pbrAudioTreeNode):
+class PitchBend(Node, AudioTreeNode):
     bl_idname = 'PitchBendNode'
     bl_label = 'Pitch Bend'
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('MidiSocketType', "MIDI")
         self.outputs.new('RawAudioSocketType', "Bend")
 
 classes.append(PitchBend)
 
-class MIDIControl(Node, pbrAudioTreeNode):
+class MIDIControl(Node, AudioTreeNode):
     bl_idname = 'MIDIControlNode'
     bl_label = 'MIDI Control'
 
@@ -375,14 +375,14 @@ class MIDIControl(Node, pbrAudioTreeNode):
         self.send_property_update(1, self.cc_no)
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.update_props(None)
 
     channel: bpy.props.IntProperty(name="Channel", description="Set to 0 to listen to all channels", min=0, max=16, default=0, update=update_props)
     cc_no: bpy.props.IntProperty(name="CC #", min=0, max=127, default=70, update=update_props)
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('MidiSocketType', "MIDI")
         self.outputs.new('RawAudioSocketType', "Value")
         self.update_props(None)
@@ -393,7 +393,7 @@ class MIDIControl(Node, pbrAudioTreeNode):
 
 classes.append(MIDIControl)
 
-class Collapse(Node, pbrAudioTreeNode):
+class Collapse(Node, AudioTreeNode):
     bl_idname = 'CollapseNode'
     bl_label = 'Collapse'
 
@@ -401,7 +401,7 @@ class Collapse(Node, pbrAudioTreeNode):
         self.send_property_update(0, self.method_enum_to_native[self.method_enum])
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.change_method(None)
 
     method_enum_items = [
@@ -419,7 +419,7 @@ class Collapse(Node, pbrAudioTreeNode):
     )
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Audio")
         self.outputs.new('RawAudioSocketType', "Audio")
 
@@ -428,7 +428,7 @@ class Collapse(Node, pbrAudioTreeNode):
 
 classes.append(Collapse)
 
-class IIRFilter(Node, pbrAudioTreeNode):
+class IIRFilter(Node, AudioTreeNode):
     bl_idname = 'IIRFilterNode'
     bl_label = 'IIR Filter'
 
@@ -437,7 +437,7 @@ class IIRFilter(Node, pbrAudioTreeNode):
         self.send_property_update(1, self.poles)
 
     def reinit(self):
-        pbrAudioTreeNode.reinit(self)
+        AudioTreeNode.reinit(self)
         self.update_props(None)
 
     mode_enum_items = [
@@ -454,7 +454,7 @@ class IIRFilter(Node, pbrAudioTreeNode):
     poles: bpy.props.IntProperty(name="Biquads", min=0, max=6, default=2, update=update_props)
 
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Input")
         self.inputs.new('RawAudioSocketType', "Cutoff (Hz)")
         self.inputs[1].value_prop = 1.0
@@ -470,22 +470,22 @@ class IIRFilter(Node, pbrAudioTreeNode):
 
 classes.append(IIRFilter)
 
-class Noise(Node, pbrAudioTreeNode):
+class Noise(Node, AudioTreeNode):
     bl_idname = 'NoiseNode'
     bl_label = 'Noise'
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Amplitude")
         self.inputs[0].value_prop = 1.0
         self.outputs.new('RawAudioSocketType', "Audio")
 
 classes.append(Noise)
 
-class Sink(Node, pbrAudioTreeNode):
+class Sink(Node, AudioTreeNode):
     bl_idname = 'SinkNode'
     bl_label = 'Sink'
     def init(self, context):
-        pbrAudioTreeNode.init(self, context)
+        AudioTreeNode.init(self, context)
         self.inputs.new('RawAudioSocketType', "Audio")
 
 classes.append(Sink)

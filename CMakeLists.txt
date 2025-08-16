@@ -52,14 +52,19 @@ if (NOT WIN32)
     COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio
     COMMAND ${CMAKE_COMMAND} -E copy
       "${CMAKE_CURRENT_SOURCE_DIR}/__init__.py"
+      "${CMAKE_CURRENT_SOURCE_DIR}/pbrAudioNodeTree.py"
       pbrAudio
-    COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/nodes
+    COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/audionodes
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-      "${CMAKE_CURRENT_SOURCE_DIR}/nodes"
-      pbrAudio/nodes
+      "${CMAKE_CURRENT_SOURCE_DIR}/audionodes"
+      pbrAudio/audionodes
     COMMAND ${CMAKE_COMMAND} -E copy
       $<TARGET_FILE_NAME:native>
-      pbrAudio/nodes
+      pbrAudio/audionodes
+    COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/audaspace
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_CURRENT_SOURCE_DIR}/audaspace"
+      pbrAudio/audaspace
     COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${CMAKE_PROJECT_NAME}.zip" --format=zip pbrAudio
     COMMAND ${CMAKE_COMMAND} -E remove_directory pbrAudio
   )
@@ -68,11 +73,12 @@ else ()
     COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio
     COMMAND ${CMAKE_COMMAND} -E copy
       "${CMAKE_CURRENT_SOURCE_DIR}/__init__.py"
+      "${CMAKE_CURRENT_SOURCE_DIR}/pbrAudioNodeTree.py"
       pbrAudio
-    COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/nodes
+    COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/audionodes
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-      "${CMAKE_CURRENT_SOURCE_DIR}/nodes"
-      pbrAudio/nodes
+      "${CMAKE_CURRENT_SOURCE_DIR}/audionodes"
+      pbrAudio/audionodes
     COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/bin
     COMMAND ${CMAKE_COMMAND} -E copy_directory
       "${CMAKE_CURRENT_SOURCE_DIR}/Release"

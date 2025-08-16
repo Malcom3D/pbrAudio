@@ -15,7 +15,10 @@ bl_info = {
 
 import bpy
 import time
+import nodeitems_utils
+from bpy.utils import register_class, unregister_class
 from bpy.types import NodeTree, Node, NodeSocket, NodeSocketFloat
+from nodeitems_utils import NodeCategory
 
 from struct import pack
 from array import array
@@ -27,17 +30,31 @@ import struct
 import tempfile
 import platform
 
-from . import nodes
-node_tree = nodes.node_tree
-ffi = nodes.ffi
+from . import audionodes
+node_tree = audionodes.node_tree
+ffi = audionodes.ffi
+from . import audaspace
+
+from . import pbrAudioNodeTree
+pbrAudioTree = pbrAudioNodeTree.pbrAudioTree
+
+classes = pbrAudioNodeTree.classes
+#for mod in (pbrAudioNodeTree, ):
+#    classes += mod.classes
 
 def register():
-    nodes.register()
+    for cls in classes:
+        register_class(cls)
+    audionodes.register()
     ffi.initialize()
+    audaspace.register()
 
 def unregister():
     ffi.cleanup()
-    nodes.unregister()
+    audionodes.unregister()
+    audaspace.unregister()
+    for cls in reversed(classes):
+        unregister_class(cls)
 
 import atexit
 def exit_handler():
