@@ -28,15 +28,19 @@ class pbrAudioTree(NodeTree):
         pass
 
     def update(self):
-        ######## from Audionodes
+        ######## for Audionodes
         # Blender likes to call this method when loading isn't yet finished,
         # don't do anything in that case
         if ffi.flag_loading_file:
             return
         ffi.begin_tree_update()
+        print('Links: ', self.links)
         for link in self.links:
+            print('Link to Node: ', link.to_node.bl_idname)
             if link.to_node.bl_idname == "NodeReroute":
                 continue
+            print('Link from Node: ', link.from_node)
+            print('Link from Socket: ', link.from_socket)
             from_node, from_socket = link.from_node, link.from_socket
             to_node, to_socket = link.to_node, link.to_socket
             connected = True

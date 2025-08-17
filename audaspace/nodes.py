@@ -6,11 +6,24 @@ from bpy.utils import register_class, unregister_class
 
 classes = []
 
-class NodeSocketSound(NodeSocket):
+class audTreeNodeSocket:
+    def get_tree(self):
+        return self.id_data
+
+    def get_index(self):
+        # TODO: store index in property?
+        return int(self.path_from_id().split('[')[-1][:-1])
+
+class audSocketSound(NodeSocket, audTreeNodeSocket):
     """Custom NodeSocket for streaming audio between audaspace 3DHandle and 3DDevice nodes."""
 
-    bl_idname = 'NodeSocketSound'
+    bl_idname = 'audSocketSound'
     bl_label = 'Sound Socket'
+
+    def update_value(self, context):
+       self.node.send_value_update(self.get_index(), self.value_prop)
+
+    value_prop: bpy.props.FloatProperty(update=update_value)
 
     def init(self, context):
         self.display_shape = 'CIRCLE'
@@ -21,7 +34,7 @@ class NodeSocketSound(NodeSocket):
     def draw_color(self, context, node):
         return (0.8, 0.2, 0.6, 1.0)  # Pinkish color for sound sockets
 
-classes.append(NodeSocketSound)
+classes.append(audSocketSound)
 
 class audPlaySound(bpy.types.Operator):
     """Play audio file"""
@@ -71,7 +84,7 @@ class audPlayBack(Node):
     )
     
     def init(self, context):
-        self.outputs.new('NodeSocketSound', "Audio Output")
+        self.outputs.new('audSocketSound', "Audio Output")
     
     def draw_buttons(self, context, layout):
         layout.prop(self, "filepath")
@@ -100,7 +113,7 @@ class aud3DOutput(Node):
 
     def init(self, context):
         """Initialize the node with an input socket."""
-        self.inputs.new('NodeSocketSound', "Input")
+        self.inputs.new('audSocketSound', "Input")
 
     def update(self):
         """Update the node's output based on the input and object transform."""
@@ -324,8 +337,8 @@ class SpatializationNode(bpy.types.Node):
 
     def init(self, context):
         """Initialize the node"""
-        self.inputs.new('NodeSocketSound', "Sound")
-        self.outputs.new('NodeSocketSound', "Sound")
+        self.inputs.new('audSocketSound', "Sound")
+        self.outputs.new('audSocketSound', "Sound")
 
     def draw_buttons(self, context, layout):
         """Draw node properties"""

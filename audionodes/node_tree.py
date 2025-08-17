@@ -31,7 +31,7 @@ class RawAudioSocket(NodeSocket, AudioTreeNodeSocket):
             layout.prop(data=self, property="value_prop", text=text)
 
     def draw_color(self, context, node):
-        return (0.607, 0.153, 0.702, 1.0)
+        return (0.6, 0.15, 0.7, 1.0)
 
 classes.append(RawAudioSocket)
 
