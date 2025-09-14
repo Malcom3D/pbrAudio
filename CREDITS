@@ -1,0 +1,7 @@
+This project includes code for and/or from the following open-source projects:
+
+- Blender (https://www.blender.org/), Copyright (C) Blender Foundation, licensed under GPL-2.0-or-later.
+- Faust (https://faust.grame.fr/), Copyright (C) GRAME, licensed under GPL-2.0-or-later.
+- Harmonic Fluids (https://github.com/ashab015/Harmonic-Fluids), Copyright (C) Abhishek Shingane, licensed under GPL-3.0.
+- Optimus (https://github.com/optimuslib/optimus), Copyright (C) ..., licensed under Apache-2.0.
+- oneTBB (https://github.com/oneapi-src/oneTBB), Copyright (C) Intel Corporation, licensed under Apache-2.0.
