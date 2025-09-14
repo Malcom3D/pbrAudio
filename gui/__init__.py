@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import bpy
+from bpy.props import PointerProperty
 from bpy.utils import register_class, unregister_class
 
 classes = []
@@ -30,6 +31,17 @@ def register():
     for cls in classes:
         register_class(cls)
 
+    # Register property groups
+    bpy.types.Scene.pbraudio = PointerProperty(type=scenePG.PBRAudioSceneProperties)
+    bpy.types.Material.pbraudio = PointerProperty(type=materialPG.PBRAudioMaterialProperties)
+    bpy.types.World.pbraudio = PointerProperty(type=worldPG.PBRAudioWorldProperties)
+
 def unregister():
     for cls in reversed(classes):
         unregister_class(cls)
+
+    """Unregister all classes and properties"""
+    # Remove property groups
+    del bpy.types.Scene.pbraudio
+    del bpy.types.Material.pbraudio
+    del bpy.types.World.pbraudio

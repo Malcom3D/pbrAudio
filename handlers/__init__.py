@@ -17,6 +17,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import bpy
+from bpy.app.handlers import persistent
 from bpy.utils import register_class, unregister_class
 
 classes = []
@@ -30,6 +31,43 @@ def register():
     for cls in classes:
         register_class(cls)
 
+    # Add handler for playback events
+    if not hasattr(bpy.types.Screen, '_play_handler'):
+        @persistent
+        def play_handler(scene):
+            # Update all playback status nodes when playback state change to play
+            for node_tree in bpy.data.node_groups:
+                if 'pbrAudio' in node_tree.name:
+                    if node_tree.nodes.values():
+                        for node in node_tree.nodes:
+                            if hasattr(node, 'playback_update'):
+                                node.playback_update(True)
+
+    if not hasattr(bpy.types.Screen, '_stop_handler'):
+        @persistent
+        def stop_handler(scene):
+            # Update all playback status nodes when playback state change to stop
+            for node_tree in bpy.data.node_groups:
+                if 'pbrAudio' in node_tree.name:
+                    if node_tree.nodes.values():
+                        for node in node_tree.nodes:
+                            if hasattr(node, 'playback_update'):
+                                node.playback_update(False)
+
+        bpy.types.Screen._play_handler = play_handler
+        bpy.types.Screen._stop_handler = stop_handler
+        bpy.app.handlers.animation_playback_post.append(stop_handler)
+        bpy.app.handlers.animation_playback_pre.append(play_handler)
+
 def unregister():
     for cls in reversed(classes):
         unregister_class(cls)
+
+    # Remove handler
+    if hasattr(bpy.types.Screen, '_playback_handler'):
+        if bpy.types.Screen._play_handler in bpy.app.handlers.animation_playback_pre:
+            bpy.app.handlers.animation_playback_pre.remove(bpy.types.Screen._play_handler)
+        if bpy.types.Screen._stop_handler in bpy.app.handlers.animation_playback_post:
+            bpy.app.handlers.animation_playback_post.remove(bpy.types.Screen._stop_handler)
+        delattr(bpy.types.Screen, '_play_handler')
+        delattr(bpy.types.Screen, '_stop_handler')
