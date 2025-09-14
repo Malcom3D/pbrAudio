@@ -40,7 +40,7 @@ if not platform.system() in {"Linux"}:
 bl_info = {
     "name": "pbrAudio Render Engine",
     "author": "Malcom3D",
-    "version": (0, 2, 0),
+    "version": (0, 2, 1),
     "blender": (4, 5, 0),
     "category": "Render",
     "location": "Render Engine > pbrAudio",
@@ -53,7 +53,7 @@ version_string = f'{bl_info["version"][0]}.{bl_info["version"][1]}.{bl_info["ver
 if 'warning' in bl_info:
     version_string = version_string + f'-{bl_info["warning"]}'
 
-from . import engine gui handlers nodes nodetrees operators sockets
+from . import engine, gui, handlers, nodes, nodetrees, operators, sockets
 
 def register():
     print("Register", __package__)
