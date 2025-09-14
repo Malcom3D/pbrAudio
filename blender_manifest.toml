@@ -43,6 +43,12 @@ platforms = ["linux-x64"]
 #   "./wheels/jsmin-3.0.1-py3-none-any.whl",
 # ]
 wheels = [
+   "./wheels/PyYAML-6.0.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+   "./wheels/typing_extensions-4.15.0-py3-none-any.whl",
+   "./wheels/donfig-0.8.1.post1-py3-none-any.whl",
+   "./wheels/packaging-25.0-py3-none-any.whl",
+   "./wheels/numcodecs-0.16.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+   "./wheels/crc32c-2.7.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
    "./wheels/zarr-3.1.2-py3-none-any.whl",
 ]
 
