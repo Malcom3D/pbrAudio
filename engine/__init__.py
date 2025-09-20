@@ -21,9 +21,9 @@ from bpy.utils import register_class, unregister_class
 
 classes = []
 
-from . import final
+from . import base
 
-for mod in (final, ):
+for mod in (base, ):
     classes += mod.classes
 
 def register():

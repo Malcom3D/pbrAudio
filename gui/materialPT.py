@@ -23,24 +23,30 @@ classes = []
 
 class PBRAUDIO_PT_material_panel(Panel):
     """Panel for pbrAudio material settings"""
-    bl_label = "pbrAudio Material"
-    bl_idname = "PBRAUDIO_PT_material_panel"
+#    COMPAT_ENGINES = {"PBRAUDIO"}
+    bl_label = 'Audio Material'
+    bl_idname = 'PBRAUDIO_PT_material_panel'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
-    bl_context = "material"
+    bl_context = 'material'
 
     @classmethod
     def poll(cls, context):
-        return context.scene.render.engine == 'PBRAUDIO' and context.material
+        return context.scene.render.engine == 'PBRAUDIO' and context.object is not None
 
     def draw(self, context):
         layout = self.layout
-        mat = context.material
+#        object = bpy.context.active_object
+        object = bpy.context.object
+        AcousticDomain = bpy.data.worlds.values()[0].pbraudio.acoustic_domain
 
-        if not mat.pbraudio:
-            layout.operator("material.pbraudio_init", text="Initialize pbrAudio Material")
+        if not object == AcousticDomain:
+            if object.pbraudio.nodetree:
+                layout.prop(object.pbraudio.nodetree, 'name', text='')
+            else:
+                layout.operator('material.pbraudio_new', text='New', icon='ADD')
         else:
-            layout.prop(mat.pbraudio, "acoustic_properties")
-            layout.prop(mat.pbraudio, "sound_absorption")
+            layout.label(text='World acousti domain selected.')
+            layout.label(text='Material settings are in the world panel.')
 
 classes.append(PBRAUDIO_PT_material_panel)

@@ -18,12 +18,19 @@
 
 import bpy
 from bpy.types import PropertyGroup
-from bpy.props import FloatVectorProperty, FloatProperty
+from bpy.props import FloatVectorProperty, FloatProperty, PointerProperty
+
+from ..nodetrees.materialsNT import AudioMaterialNodeTree
 
 classes = []
 
 class PBRAudioMaterialProperties(PropertyGroup):
     """Material properties for pbrAudio"""
+    nodetree: PointerProperty(
+        name="Node Tree",
+        type=AudioMaterialNodeTree
+    )
+
     acoustic_properties: FloatVectorProperty(
         name="Acoustic Properties",
         description="Material acoustic characteristics",

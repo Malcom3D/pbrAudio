@@ -58,7 +58,7 @@ def register():
     register_node_categories("MATERIAL", material_node_categories)
 
 def unregister():
-    unregister_node_categories("WORLD_NODE")
-    unregister_node_categories("MATERIAL_NODE")
+    unregister_node_categories("WORLD")
+    unregister_node_categories("MATERIAL")
     for cls in reversed(classes):
         unregister_class(cls)

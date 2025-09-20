@@ -21,9 +21,29 @@ from bpy.types import Panel
 
 classes = []
 
+class PBRAUDIO_PT_device_panel(Panel):
+    """Panel for pbrAudio render device settings"""
+    bl_label = "Device"
+    bl_idname = "PBRAUDIO_PT_device_panel"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "render"
+
+    @classmethod
+    def poll(cls, context):
+        return context.scene.render.engine == 'PBRAUDIO'
+
+    def draw(self, context):
+        layout = self.layout
+        scene = context.scene
+
+        layout.prop(scene.pbraudio, "device")
+ 
+classes.append(PBRAUDIO_PT_device_panel)
+
 class PBRAUDIO_PT_engine_panel(Panel):
     """Panel for pbrAudio render engine settings"""
-    bl_label = "pbrAudio Settings"
+    bl_label = "Settings"
     bl_idname = "PBRAUDIO_PT_engine_panel"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
@@ -39,6 +59,5 @@ class PBRAUDIO_PT_engine_panel(Panel):
 
         layout.prop(scene.pbraudio, "audio_quality")
         layout.prop(scene.pbraudio, "sample_rate")
-        layout.prop(scene.pbraudio, "enable_realtime_audio")
 
 classes.append(PBRAUDIO_PT_engine_panel)

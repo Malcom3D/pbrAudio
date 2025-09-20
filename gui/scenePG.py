@@ -23,7 +23,26 @@ from bpy.props import EnumProperty, IntProperty, BoolProperty
 classes = []
 
 class PBRAudioSceneProperties(PropertyGroup):
+    def set_sample_rate(self, context):
+        if 'LOW' in self.audio_quality:
+            self.sample_rate = 24000
+        if 'MEDIUM' in self.audio_quality:
+            self.sample_rate = 48000
+        if 'HIGH' in self.audio_quality:
+            self.sample_rate = 96000
+        if 'ULTRA' in self.audio_quality:
+            self.sample_rate = 192000
+
     """Scene properties for pbrAudio"""
+    device: EnumProperty(
+        name="Device",
+        items=[
+            ('CPU', "CPU", "Use CPU device for rendering"),
+            ('GPU', "GPU Compute", "Use GPU Compute device for rendering, configured in the system tab in the user preferences"),
+        ],
+        default='CPU'
+    )
+
     audio_quality: EnumProperty(
         name="Audio Quality",
         items=[
@@ -32,21 +51,22 @@ class PBRAudioSceneProperties(PropertyGroup):
             ('HIGH', "High", "High quality, slow rendering"),
             ('ULTRA', "Ultra", "Ultra quality, very slow rendering"),
         ],
-        default='MEDIUM'
+        default='MEDIUM',
+        update=set_sample_rate
     )
 
     sample_rate: IntProperty(
         name="Sample Rate",
         description="Audio sample rate in Hz",
-        default=44100,
+        default=48000,
         min=8000,
         max=192000
     )
 
-    enable_realtime_audio: BoolProperty(
-        name="Realtime Audio",
-        description="Enable realtime audio processing",
-        default=False
-    )
+#    enable_realtime_audio: BoolProperty(
+#        name="Realtime Audio",
+#        description="Enable realtime audio processing",
+#        default=False
+#    )
 
 classes.append(PBRAudioSceneProperties)

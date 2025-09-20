@@ -32,9 +32,9 @@ def register():
         register_class(cls)
 
     # Register property groups
-    bpy.types.Scene.pbraudio = PointerProperty(type=scenePG.PBRAudioSceneProperties)
-    bpy.types.Material.pbraudio = PointerProperty(type=materialPG.PBRAudioMaterialProperties)
     bpy.types.World.pbraudio = PointerProperty(type=worldPG.PBRAudioWorldProperties)
+    bpy.types.Scene.pbraudio = PointerProperty(type=scenePG.PBRAudioSceneProperties)
+    bpy.types.Object.pbraudio = PointerProperty(type=materialPG.PBRAudioMaterialProperties)
 
 def unregister():
     for cls in reversed(classes):
@@ -43,5 +43,5 @@ def unregister():
     """Unregister all classes and properties"""
     # Remove property groups
     del bpy.types.Scene.pbraudio
-    del bpy.types.Material.pbraudio
     del bpy.types.World.pbraudio
+    del bpy.types.Object.pbraudio

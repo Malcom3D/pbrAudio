@@ -18,12 +18,26 @@
 
 import bpy
 from bpy.types import PropertyGroup
-from bpy.props import FloatProperty
+from bpy.props import FloatProperty, PointerProperty
+
+from ..nodetrees.worldNT import AudioWorldNodeTree
 
 classes = []
 
 class PBRAudioWorldProperties(PropertyGroup):
     """World properties for pbrAudio"""
+    acoustic_domain: PointerProperty(
+        name="Domain Target Object",
+        type=bpy.types.Object,
+        description="Select the target object"
+    )
+
+    """World Material properties for pbrAudio"""
+    nodetree: PointerProperty(
+        name="World Node Tree",
+        type=AudioWorldNodeTree
+    )
+
     ambient_sound_level: FloatProperty(
         name="Ambient Sound Level",
         description="Base level of ambient sound",

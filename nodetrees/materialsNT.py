@@ -31,4 +31,8 @@ class AudioMaterialNodeTree(NodeTree):
     bl_label = "Audio Material"
     bl_icon = 'MATERIAL'
 
+    @classmethod
+    def poll(cls, context):
+        return context.scene.render.engine == "PBRAUDIO"
+
 classes.append(AudioMaterialNodeTree)

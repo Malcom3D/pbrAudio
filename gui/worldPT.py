@@ -21,10 +21,10 @@ from bpy.types import Panel
 
 classes = []
 
-class PBRAUDIO_PT_world_panel(Panel):
-    """Panel for pbrAudio world settings"""
-    bl_label = "pbrAudio World"
-    bl_idname = "PBRAUDIO_PT_world_panel"
+class PBRAUDIO_PT_world_domain_panel(Panel):
+    """Panel for pbrAudio world domain settings"""
+    bl_label = "World Audio Domain"
+    bl_idname = "PBRAUDIO_PT_world_domain_panel"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "world"
@@ -37,10 +37,31 @@ class PBRAUDIO_PT_world_panel(Panel):
         layout = self.layout
         world = context.world
 
-        if not world.pbraudio:
-            layout.operator("world.pbraudio_init", text="Initialize pbrAudio World")
-        else:
-            layout.prop(world.pbraudio, "ambient_sound_level")
-            layout.prop(world.pbraudio, "reverb_time")
+        layout.prop(world.pbraudio, "acoustic_domain")
 
-classes.append(PBRAUDIO_PT_world_panel)
+classes.append(PBRAUDIO_PT_world_domain_panel)
+
+class PBRAUDIO_PT_world_material_panel(Panel):
+    """Panel for pbrAudio world settings"""
+    bl_label = "World Audio Material"
+    bl_idname = "PBRAUDIO_PT_world_material_panel"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "world"
+
+    @classmethod
+    def poll(cls, context):
+        return context.scene.render.engine == 'PBRAUDIO' and context.world
+
+    def draw(self, context):
+        layout = self.layout
+        world = context.world
+        AcousticDomain = bpy.data.worlds.values()[0].pbraudio.acoustic_domain
+
+        if world.pbraudio.acoustic_domain.name:
+            if world.pbraudio.nodetree:
+                layout.prop(world.pbraudio.nodetree, 'name', text='')
+            else:
+                layout.operator('world.pbraudio_new', text="New", icon='ADD')
+
+classes.append(PBRAUDIO_PT_world_material_panel)

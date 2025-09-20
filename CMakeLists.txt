@@ -8,6 +8,30 @@ endif ()
 
 include(ExternalProject)
 ExternalProject_Add(
+    rich
+    PREFIX "blender"
+    URL    https://files.pythonhosted.org/packages/e3/30/3c4d035596d3cf444529e0b2953ad0466f6049528a879d27534700580395/rich-14.1.0-py3-none-any.whl
+    URL_HASH SHA256=536f5f1785986d6dbdea3c75205c473f970777b4a0d6c6dd1b696aa05a3fa04f
+    BUILD_ALWAYS OFF
+    DOWNLOAD_NO_EXTRACT ON
+    DOWNLOAD_NO_PROGRESS ON
+    BUILD_COMMAND cmake -E echo "Skipping build step."
+    INSTALL_COMMAND cmake -E echo "Skipping install step."
+    CONFIGURE_COMMAND cmake -E echo "Skipping configure step."
+)
+ExternalProject_Add(
+    zarrs
+    PREFIX "blender"
+    URL    https://files.pythonhosted.org/packages/f4/45/95f2b85b80d586c9a1227def9fbc0b0c3181a45445d5599288554c562a72/zarrs-0.2.0-cp311-abi3-manylinux_2_28_x86_64.whl
+    URL_HASH SHA256=2551112c2159e349d19c3e27f6a213f74ab0d016b4862c9474bdbe690f1f46ae
+    BUILD_ALWAYS OFF
+    DOWNLOAD_NO_EXTRACT ON
+    DOWNLOAD_NO_PROGRESS ON
+    BUILD_COMMAND cmake -E echo "Skipping build step."
+    INSTALL_COMMAND cmake -E echo "Skipping install step."
+    CONFIGURE_COMMAND cmake -E echo "Skipping configure step."
+)
+ExternalProject_Add(
     zarr
     PREFIX "blender"
     URL    https://files.pythonhosted.org/packages/e0/a3/d3d4fd394a10b1256f9dccb2fe0ddd125fc575d7c437b1c70df050f14176/zarr-3.1.2-py3-none-any.whl
@@ -96,6 +120,8 @@ ExternalProject_Get_property(zarr DOWNLOAD_DIR)
 # Make a .zip-file which can be installed into Blender
 if (NOT WIN32)
   add_custom_target (blender 
+    DEPENDS rich
+    DEPENDS zarrs
     DEPENDS zarr
     DEPENDS typing-extensions
     DEPENDS donfig
@@ -151,6 +177,8 @@ if (NOT WIN32)
     COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${CMAKE_PROJECT_NAME}.zip" --format=zip pbrAudio
     COMMAND ${CMAKE_COMMAND} -E remove_directory pbrAudio
   )
+  add_dependencies(blender rich)
+  add_dependencies(blender zarrs)
   add_dependencies(blender zarr)
   add_dependencies(blender yaml)
   add_dependencies(blender crc32c)
