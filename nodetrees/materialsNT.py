@@ -29,7 +29,7 @@ class AudioMaterialNodeTree(NodeTree):
     """Node tree for audio-based material properties"""
     bl_idname = 'AudioMaterialNodeTree'
     bl_label = "Audio Material"
-    bl_icon = 'MATERIAL'
+    bl_icon = 'SOUND'
 
     @classmethod
     def poll(cls, context):

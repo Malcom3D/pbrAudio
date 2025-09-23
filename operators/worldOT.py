@@ -22,8 +22,8 @@ from bpy.types import Operator
 
 classes = []
 
-class PBRAUDIO_OT_world_material_new(Operator):
-    bl_idname = "world.pbraudio_new"
+class PBRAUDIO_OT_world_material_add(Operator):
+    bl_idname = "world.pbraudio_add"
     bl_label = "New pbrAudio world material"
     bl_description = "Create a new world audio material node tree"
     bl_options = {'REGISTER', 'UNDO'}
@@ -31,11 +31,10 @@ class PBRAUDIO_OT_world_material_new(Operator):
     name: StringProperty(
         name="Name",
         description="Name of the pbrAudio world node tree",
-        default="AudioWorld"
+        default="AcousticWorld"
     )
 
     def execute(self, context):
-#        world = bpy.data.worlds.values()[0].pbraudio.acoustic_domain
         world = context.world
         if world and world.pbraudio:
             # Create new pbrAudio World node tree
@@ -46,4 +45,47 @@ class PBRAUDIO_OT_world_material_new(Operator):
         self.report({'INFO'}, f"Created pbrAudio World node tree: {nodetree.name}")
         return {'FINISHED'}
 
-classes.append(PBRAUDIO_OT_world_material_new)
+classes.append(PBRAUDIO_OT_world_material_add)
+
+# Operators for managing the world environment collection
+class PBRAUDIO_OT_environment_item_add(Operator):
+    bl_idname = "world.pbraudioenv_add"
+    bl_label = "Add World Environment Collection Item"
+    
+    @classmethod
+    def poll(cls, context):
+        return context.space_data.node_tree == 'AudioWorldNodeTree'
+    
+    def execute(self, context):
+        node = context.active_node
+        if node and hasattr(node, 'outputs'):
+            for socket in node.outputs:
+                if hasattr(socket, 'items'):
+                    item = socket.items.add()
+                    item.name = f"Environment {len(socket.items)}"
+                    socket.active_index = len(socket.items) - 1
+                    break
+        return {'FINISHED'}
+
+classes.append(PBRAUDIO_OT_environment_item_add)
+
+class PBRAUDIO_OT_environment_item_remove(Operator):
+    bl_idname = "world.pbraudioenv_remove"
+    bl_label = "Remove World Environment Collection Item"
+    
+    @classmethod
+    def poll(cls, context):
+        return context.space_data.node_tree == 'AudioWorldNodeTree'
+    
+    def execute(self, context):
+        node = context.active_node
+        if node and hasattr(node, 'outputs'):
+            for socket in node.outputs:
+                if hasattr(socket, 'items') and socket.items:
+                    if socket.active_index >= 0 and socket.active_index < len(socket.items):
+                        socket.items.remove(socket.active_index)
+                        socket.active_index = min(socket.active_index, len(socket.items) - 1)
+                    break
+        return {'FINISHED'}
+
+classes.append(PBRAUDIO_OT_environment_item_remove)

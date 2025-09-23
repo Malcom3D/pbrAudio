@@ -28,7 +28,11 @@ classes = []
 class AudioWorldNodeTree(NodeTree):
     """Node tree for audio-based world properties"""
     bl_idname = 'AudioWorldNodeTree'
-    bl_label = "Audio World"
+    bl_label = "Acoustic World"
     bl_icon = 'WORLD'
+
+    @classmethod
+    def poll(cls, context):
+        return context.scene.render.engine == "PBRAUDIO"
 
 classes.append(AudioWorldNodeTree)

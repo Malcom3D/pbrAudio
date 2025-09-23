@@ -22,10 +22,10 @@ from bpy.types import Operator
 
 classes = []
 
-class PBRAUDIO_OT_material_new(Operator):
-    bl_idname = "material.pbraudio_new"
+class PBRAUDIO_OT_material_add(Operator):
+    bl_idname = "material.pbraudio_add"
     bl_label = "New pbrAudio material"
-    bl_description = "Create a new audio material node tree"
+    bl_description = "Create a add audio material node tree"
     bl_options = {'REGISTER', 'UNDO'}
 
     name: StringProperty(
@@ -45,4 +45,4 @@ class PBRAUDIO_OT_material_new(Operator):
         self.report({'INFO'}, f"Created pbrAudio node tree: {nodetree.name}")
         return {'FINISHED'}
 
-classes.append(PBRAUDIO_OT_material_new)
+classes.append(PBRAUDIO_OT_material_add)

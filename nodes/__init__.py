@@ -34,8 +34,12 @@ class WorldNodeCategory(NodeCategory):
 
 world_node_categories = [
     WorldNodeCategory("WORLD_NODES", "World", items=[
-        NodeItem("AudioEnvironmentNode"),
-        NodeItem("AudioWorldOutputNode"),
+        NodeItem("pbrAudioWorldOutputNode"),
+        NodeItem("pbrAudioSoundSpeedNode"),
+        NodeItem("pbrAudioImpedenceNode"),
+        NodeItem("pbrAudioDensityNode"),
+        NodeItem("pbrAudioTemperatureNode"),
+        NodeItem("pbrAudioEnvironmentNode"),
     ]),
 ]
 

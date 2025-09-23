@@ -150,6 +150,10 @@ if (NOT WIN32)
     COMMAND ${CMAKE_COMMAND} -E copy_directory
       "${CMAKE_CURRENT_SOURCE_DIR}/gui"
       pbrAudio/gui
+    COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/properties
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_CURRENT_SOURCE_DIR}/properties"
+      pbrAudio/properties
     COMMAND ${CMAKE_COMMAND} -E make_directory pbrAudio/handlers
     COMMAND ${CMAKE_COMMAND} -E copy_directory
       "${CMAKE_CURRENT_SOURCE_DIR}/handlers"

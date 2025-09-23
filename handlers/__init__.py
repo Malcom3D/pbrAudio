@@ -59,11 +59,48 @@ def register():
         bpy.app.handlers.animation_playback_post.append(stop_handler)
         bpy.app.handlers.animation_playback_pre.append(play_handler)
 
+
+    @persistent
+    def item_activate_handler(context):
+        object = bpy.context.active_object
+        treeType = None
+        nodeTreeName = None
+
+        if object.type == 'EMPTY' or object.type == 'CAMERA':
+            return
+
+        for world in bpy.data.worlds:
+            if hasattr(world.pbraudio, 'acoustic_domain'):
+                AcousticDomain = world.pbraudio.acoustic_domain
+
+        if object == AcousticDomain:
+            treeType = 'AudioWorldNodeTree'
+            if hasattr(world.pbraudio.nodetree, 'name'):
+                nodeTreeName = world.pbraudio.nodetree.name
+        else:
+            treeType = 'AudioMaterialNodeTree'
+            if hasattr(object.pbraudio.nodetree, 'name'):
+                nodeTreeName = object.pbraudio.nodetree.name
+
+        if treeType is not None:
+            for area in bpy.context.screen.areas:
+                if area.type == "NODE_EDITOR":
+                    for space in area.spaces:
+                        if space.type == "NODE_EDITOR" and not space.pin:
+                            if 'Audio' in space.tree_type:
+                                space.tree_type = treeType
+                                if nodeTreeName is not None:
+                                    space.node_tree = bpy.data.node_groups[nodeTreeName]
+
+    bpy.app.handlers.depsgraph_update_post.append(item_activate_handler)
+
 def unregister():
     for cls in reversed(classes):
         unregister_class(cls)
 
     # Remove handler
+    bpy.app.handlers.depsgraph_update_post.remove(item_activate_handler)
+
     if hasattr(bpy.types.Screen, '_playback_handler'):
         if bpy.types.Screen._play_handler in bpy.app.handlers.animation_playback_pre:
             bpy.app.handlers.animation_playback_pre.remove(bpy.types.Screen._play_handler)

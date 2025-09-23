@@ -41,10 +41,10 @@ class PBRAUDIO_PT_world_domain_panel(Panel):
 
 classes.append(PBRAUDIO_PT_world_domain_panel)
 
-class PBRAUDIO_PT_world_material_panel(Panel):
+class PBRAUDIO_PT_acoustic_world_panel(Panel):
     """Panel for pbrAudio world settings"""
-    bl_label = "World Audio Material"
-    bl_idname = "PBRAUDIO_PT_world_material_panel"
+    bl_label = "Acoustic World"
+    bl_idname = "PBRAUDIO_PT_acoustic_world_panel"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "world"
@@ -56,12 +56,10 @@ class PBRAUDIO_PT_world_material_panel(Panel):
     def draw(self, context):
         layout = self.layout
         world = context.world
-        AcousticDomain = bpy.data.worlds.values()[0].pbraudio.acoustic_domain
+        snode = world.pbraudio
+        AcousticDomain = world.pbraudio.acoustic_domain
 
-        if world.pbraudio.acoustic_domain.name:
-            if world.pbraudio.nodetree:
-                layout.prop(world.pbraudio.nodetree, 'name', text='')
-            else:
-                layout.operator('world.pbraudio_new', text="New", icon='ADD')
+        if world.pbraudio.acoustic_domain:
+            layout.template_ID(snode, "nodetree", new="world.pbraudio_add")
 
-classes.append(PBRAUDIO_PT_world_material_panel)
+classes.append(PBRAUDIO_PT_acoustic_world_panel)

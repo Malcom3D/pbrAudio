@@ -18,18 +18,102 @@
 
 import bpy
 from bpy.types import NodeSocket
-from bpy.props import FloatProperty
+from bpy.props import IntProperty, FloatProperty, PointerProperty
+
+from ..properties import worldPG
 
 classes = []
 
-class AudioWorldNodeSocket(NodeSocket):
-    """Custom socket type for audio world nodes"""
-    bl_idname = 'AudioWorldNodeSocket'
-    bl_label = "Audio World Socket"
-
-    default_value: FloatProperty(default=0.0)
+class pbrAudioSoundSpeedNodeSocket(NodeSocket):
+    bl_idname = 'pbrAudioSoundSpeedNodeSocket'
+    bl_label = "pbrAudio Sound Speed Socket"
 
     def draw(self, context, layout, node, text):
-        layout.label(text=text)
+        for world in bpy.data.worlds.values():
+            if hasattr(world, 'pbraudio'):
+                pbraudio = world.pbraudio
+        layout.prop(pbraudio, "sound_speed", text='Sound Speed')
 
-classes.append(AudioWorldNodeSocket)
+    def draw_color(self, context, node):
+        return (0.65, 0.65, 0.65, 1.0) # Light Gray for Float
+
+classes.append(pbrAudioSoundSpeedNodeSocket)
+
+class pbrAudioImpedenceNodeSocket(NodeSocket):
+    bl_idname = 'pbrAudioImpedenceNodeSocket'
+    bl_label = "pbrAudio Impedence Socket"
+
+    def draw(self, context, layout, node, text):
+        for world in bpy.data.worlds.values():
+            if hasattr(world, 'pbraudio'):
+                pbraudio = world.pbraudio
+        layout.prop(pbraudio, "impedence", text='Impedence', slider=True)
+
+    def draw_color(self, context, node):
+        return (0.65, 0.65, 0.65, 1.0) # Light Gray for Float
+
+classes.append(pbrAudioImpedenceNodeSocket)
+
+class pbrAudioDensityNodeSocket(NodeSocket):
+    bl_idname = 'pbrAudioDensityNodeSocket'
+    bl_label = "pbrAudio Temperature Socket"
+
+    def draw(self, context, layout, node, text):
+        for world in bpy.data.worlds.values():
+            if hasattr(world, 'pbraudio'):
+                pbraudio = world.pbraudio
+        layout.prop(pbraudio, "density", text='Density', slider=True)
+
+    def draw_color(self, context, node):
+        return (0.65, 0.65, 0.65, 1.0) # Light Gray for Float
+
+classes.append(pbrAudioDensityNodeSocket)
+
+class pbrAudioTemperatureNodeSocket(NodeSocket):
+    bl_idname = 'pbrAudioTemperatureNodeSocket'
+    bl_label = "pbrAudio Temperature Socket"
+
+    def draw(self, context, layout, node, text):
+        for world in bpy.data.worlds.values():
+            if hasattr(world, 'pbraudio'):
+                pbraudio = world.pbraudio
+        layout.prop(pbraudio, "temperature", text='Temperature', slider=True)
+
+    def draw_color(self, context, node):
+        return (0.65, 0.65, 0.65, 1.0) # Light Gray for Float
+
+classes.append(pbrAudioTemperatureNodeSocket)
+
+#class pbrAudioWorldEnvironmentNodeSocket(NodeSocket):
+#    bl_idname = 'pbrAudioWorldEnvironmentNodeSocket'
+#    bl_label = "pbrAudio World Environment Socket"
+
+#    # Collection property for the socket
+#    items: PointerProperty(
+#       name="Environment Collection",
+#       type=worldPG.PBRAudioWorldEnvironmentProperties
+#    )
+#    
+#    # Active index for the collection
+#    active_index: IntProperty(
+#       name="Environment Collection Index",
+#       default=0
+#    )
+#
+#    def draw(self, context, layout, node, text):
+#       if self.is_output:
+#          # Display collection items
+#          #template_list("UI_UL_list", "collection_items", self, "items", self, "active_index", rows=3)
+#          template_list("UI_UL_list", "collection_items", self, "items", self, "active_index")
+#
+#          col = layout.column()
+#          row = col.row(align=True)
+#          row.operator("world.pbraudioenv_add", text="Add", icon='ADD')
+#          row.operator("world.pbraudioenv_remove", text="Remove", icon='REMOVE')
+#       else:
+#          layout.label(text='Input')
+#
+#    def draw_color(self, context, node):
+#        return (1.0, 1.0, 1.0, 1.0) # white for collection data
+#
+#classes.append(pbrAudioWorldEnvironmentNodeSocket)

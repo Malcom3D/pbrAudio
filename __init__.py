@@ -53,7 +53,7 @@ version_string = f'{bl_info["version"][0]}.{bl_info["version"][1]}.{bl_info["ver
 if 'warning' in bl_info:
     version_string = version_string + f'-{bl_info["warning"]}'
 
-from . import engine, gui, handlers, nodes, nodetrees, operators, sockets
+from . import engine, gui, handlers, nodes, nodetrees, operators, sockets, properties
 
 def register():
     print("Register", __package__)
@@ -61,19 +61,21 @@ def register():
     nodetrees.register()
     sockets.register()
     nodes.register()
+    properties.register()
     operators.register()
     handlers.register()
     gui.register()
 
 def unregister():
     print("UnRegister", __package__)
-    engine.unregister()
-    nodetrees.unregister()
-    sockets.unregister()
-    nodes.unregister()
-    operators.unregister()
-    handlers.unregister()
     gui.unregister()
+    handlers.unregister()
+    operators.unregister()
+    properties.unregister()
+    nodes.unregister()
+    sockets.unregister()
+    nodetrees.unregister()
+    engine.unregister()
 
 if __name__ == "__main__":
     register()

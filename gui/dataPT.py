@@ -21,30 +21,33 @@ from bpy.types import Panel
 
 classes = []
 
-class PBRAUDIO_PT_material_panel(Panel):
-    """Panel for pbrAudio material settings"""
-    bl_label = 'Audio Material'
-    bl_idname = 'PBRAUDIO_PT_material_panel'
+class PBRAUDIO_PT_data_panel(Panel):
+    """Panel for pbrAudio sound I/O settings"""
+    bl_label = 'Sound I/O'
+    bl_idname = 'PBRAUDIO_PT_data_panel'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
-    bl_context = 'material'
+    bl_context = 'data'
 
     @classmethod
     def poll(cls, context):
-        return context.scene.render.engine == 'PBRAUDIO' and context.object is not None
+        return context.scene.render.engine == 'PBRAUDIO' and context.object.type == 'EMPTY' or context.object.type == 'CAMERA'
 
     def draw(self, context):
         layout = self.layout
         object = context.object
         snode = object.pbraudio
-        for world in bpy.data.worlds:
-            if hasattr(world, 'pbraudio'):
-                AcousticDomain = world.pbraudio.acoustic_domain
 
-        if not object == AcousticDomain:
-                layout.template_ID(snode, "nodetree", new="material.pbraudio_add")
+        layout.prop(object.pbraudio, "output")
+
+        if not object.pbraudio.output and object.type == 'EMPTY':
+            # Object is a Sound Source
+            layout.prop(object.pbraudio, "source_type")
+            layout.template_ID(snode, "source", new="sound.open_mono")
         else:
-            layout.label(text='Acoustic World Domain.')
-            layout.label(text='Settings are in the world panel.')
+            # Object is a Sound Output
+            layout.prop(object.pbraudio, "output_type")
+            if object.pbraudio.output_type == 'AMBI':
+                layout.prop(object.pbraudio, "ambisonic_order")
 
-classes.append(PBRAUDIO_PT_material_panel)
+classes.append(PBRAUDIO_PT_data_panel)

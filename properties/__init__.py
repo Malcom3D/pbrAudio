@@ -17,21 +17,35 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import bpy
-#from bpy.props import PointerProperty
+from bpy.props import PointerProperty
+#from bpy.props import PointerProperty, CollectionProperty
 from bpy.utils import register_class, unregister_class
 
 classes = []
 
-from . import enginePT, materialPT, worldPT, dataPT
+from . import objectPG, scenePG, worldPG
 
-for mod in (enginePT, materialPT, worldPT, dataPT):
+for mod in (objectPG, scenePG, worldPG):
     classes += mod.classes
 
 def register():
     for cls in classes:
         register_class(cls)
 
+    # Register property groups
+    bpy.types.Scene.pbraudio = PointerProperty(type=scenePG.PBRAudioSceneProperties)
+    bpy.types.Object.pbraudio = PointerProperty(type=objectPG.PBRAudioObjectProperties)
+    bpy.types.World.pbraudio = PointerProperty(type=worldPG.PBRAudioWorldProperties)
+    # pbrAudio World Enviroment Properties
+#    bpy.types.World.pbraudioEnv = CollectionProperty(type=worldPG.PBRAudioWorldEnvironmentProperties)
+
 def unregister():
     """Unregister all classes and properties"""
+    # Remove property groups
+#    del bpy.types.World.pbraudioEnv
+    del bpy.types.World.pbraudio
+    del bpy.types.Object.pbraudio
+    del bpy.types.Scene.pbraudio
+
     for cls in reversed(classes):
         unregister_class(cls)
