@@ -67,11 +67,11 @@ class PBRAudioObjectProperties(PropertyGroup):
     ambisonic_order: EnumProperty(
         name="Order",
         items=[
-            ('FIRST', "First", "First order"),
-            ('SECOND', "Second", "Second order"),
-            ('THIRD', "Third", "Third order"),
+            ('1', "First", "First order"),
+            ('2', "Second", "Second order"),
+            ('3', "Third", "Third order"),
         ],
-        default='FIRST'
+        default='1'
     )
 
 classes.append(PBRAudioObjectProperties)

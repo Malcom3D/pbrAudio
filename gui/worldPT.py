@@ -35,6 +35,9 @@ class PBRAUDIO_PT_world_domain_panel(Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False  # No animation.
+
         world = context.world
 
         layout.prop(world.pbraudio, "acoustic_domain")
@@ -55,6 +58,9 @@ class PBRAUDIO_PT_acoustic_world_panel(Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False  # No animation.
+
         world = context.world
         snode = world.pbraudio
         AcousticDomain = world.pbraudio.acoustic_domain

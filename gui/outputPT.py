@@ -18,16 +18,17 @@
 
 import bpy
 from bpy.types import Panel
+from bpy.types import RENDER_MT_framerate_presets
 
 classes = []
 
-class PBRAUDIO_PT_device_panel(Panel):
-    """Panel for pbrAudio render device settings"""
-    bl_label = "Device"
-    bl_idname = "PBRAUDIO_PT_device_panel"
+class PBRAUDIO_PT_format_panel(Panel):
+    """Panel for pbrAudio Format settings"""
+    bl_label = "Format"
+    bl_idname = "PBRAUDIO_PT_format_panel"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
-    bl_context = "render"
+    bl_context = "output"
 
     @classmethod
     def poll(cls, context):
@@ -40,17 +41,72 @@ class PBRAUDIO_PT_device_panel(Panel):
 
         scene = context.scene
 
-        layout.prop(scene.pbraudio, "device")
- 
-classes.append(PBRAUDIO_PT_device_panel)
+        layout.prop(scene.pbraudio, "audio_quality")
+        col = layout.column(align=True)
+        col.prop(scene.pbraudio, "sample_rate", text="Sample Rate")
+        layout.prop(scene.pbraudio, "bit_depth")
 
-class PBRAUDIO_PT_graphical_preview_panel(Panel):
-    """Panel to enable pbrAudio graphical preview and settings"""
-    bl_label = "Graphical preview"
-    bl_idname = "PBRAUDIO_PT_graphical_preview_panel"
+classes.append(PBRAUDIO_PT_format_panel)
+
+class PBRAUDIO_PT_output_panel(Panel):
+    """Panel for pbrAudio Format settings"""
+    bl_label = "Output"
+    bl_idname = "PBRAUDIO_PT_output_panel"
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
-    bl_context = "render"
+    bl_context = "output"
+
+    @classmethod
+    def poll(cls, context):
+        return context.scene.render.engine == 'PBRAUDIO'
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False  # No animation.
+
+        scene = context.scene
+
+        layout.prop(scene.pbraudio, "output_path")
+        layout.prop(scene.pbraudio, "file_format")
+
+classes.append(PBRAUDIO_PT_output_panel)
+
+class PBRAUDIO_PT_frame_range_panel(Panel):
+    """Panel for pbrAudio Frame Range settings"""
+    bl_label = "Frame Range"
+    bl_idname = "PBRAUDIO_PT_frame_range_panel"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "output"
+
+    @classmethod
+    def poll(cls, context):
+        return context.scene.render.engine == 'PBRAUDIO'
+
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False  # No animation.
+
+        scene = context.scene
+
+        col = layout.column(align=True)
+        col.enabled = False
+        col.prop(scene, "frame_start", text="Frame Start")
+        col.prop(scene, "frame_end", text="End")
+        col.prop(scene, "fps", text="FPS")
+        col.prop(scene, "fps_base", text="FPS BASE")
+
+classes.append(PBRAUDIO_PT_frame_range_panel)
+
+class PBRAUDIO_PT_metadata_panel(Panel):
+    """Panel for pbrAudio Frame Range settings"""
+    bl_label = "Metadata"
+    bl_idname = "PBRAUDIO_PT_metadata_panel"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "output"
     bl_options = {'DEFAULT_CLOSED'}
 
     @classmethod
@@ -62,64 +118,6 @@ class PBRAUDIO_PT_graphical_preview_panel(Panel):
         layout.use_property_split = True
         layout.use_property_decorate = False  # No animation.
 
-        scene = context.scene
+        layout.label(text="Metadata Text")
 
-        layout.prop(scene.pbraudio, "enable_graphical_preview")
-        if scene.pbraudio.enable_acoustic_preview:
-           pass
-
-classes.append(PBRAUDIO_PT_graphical_preview_panel)
-
-class PBRAUDIO_PT_acoustic_preview_panel(Panel):
-    """Panel to enable pbrAudio acoustic preview and settings"""
-    bl_label = "Acoustic preview"
-    bl_idname = "PBRAUDIO_PT_acoustic_preview_panel"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = "render"
-    bl_options = {'DEFAULT_CLOSED'}
-
-    @classmethod
-    def poll(cls, context):
-        return context.scene.render.engine == 'PBRAUDIO'
-
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False  # No animation.
-
-        scene = context.scene
-
-        layout.prop(scene.pbraudio, "enable_acoustic_preview")
-        if scene.pbraudio.enable_acoustic_preview:
-            layout.prop(scene.pbraudio, "preview_audio_quality")
-            col = layout.column(align=True)
-            col.prop(scene.pbraudio, "preview_sample_rate", text="Sample Rate")
-    
-classes.append(PBRAUDIO_PT_acoustic_preview_panel)
-
-class PBRAUDIO_PT_grease_pencil_panel(Panel):
-    """Panel for grease pencil settings in pbrAudio"""
-    bl_label = "Grease Pencil"
-    bl_idname = "PBRAUDIO_PT_grease_pencil_panel"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = "render"
-    bl_options = {'DEFAULT_CLOSED'}
-
-    @classmethod
-    def poll(cls, context):
-        return context.scene.render.engine == 'PBRAUDIO'
-
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False  # No animation.
-
-        scene = context.scene
-        props = scene.grease_pencil_settings
-
-        col = layout.column()
-        col.prop(props, "antialias_threshold", text="SMAA Threshold")
-
-classes.append(PBRAUDIO_PT_grease_pencil_panel)
+classes.append(PBRAUDIO_PT_metadata_panel)

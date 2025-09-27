@@ -40,60 +40,60 @@ class pbrAudioSoundSpeedNode(Node):
     bl_idname = 'pbrAudioSoundSpeedNode'
     bl_label = "Sound speed Parameters"
 
-    def compute_speed(self, context):
-       for world in bpy.data.worlds.values():
-          if hasattr(world, 'pbraudio'):
-             pbraudio = world.pbraudio
-
-       if pbraudio.type == 'GAS':
-          pbraudio.sound_speed = sqrt((self.C_p/self.C_v)*(self.R_0/self.M)*(pbraudio.temperature-273.15)
-       elif pbraudio.type == 'LIQUID':
-          pbraudio.sound_speed = sqrt(self.K/pbraudio.density)
-       elif pbraudio.type == 'SOLID':
-          pbraudio.sound_speed = sqrt(self.E/pbraudio.density)
-
-       if self.outputs['Sound Speed'].is_linked:
-          self.outputs['Sound Speed'].sound_speed = pbraudio.sound_speed
-
-    C_p: FloatProperty(
-        name="Specific heat at constant pressure",
-        default=7.0,
-        update=compute_speed
-    )
-
-    C_v: FloatProperty(
-        name="Specific heat at constant volume",
-        default=5.0,
-        update=compute_speed
-    )
-
-    R_0: FloatProperty(
-        name="Gas constant",
-        default=8.31446261815324,
-        update=compute_speed
-    )
-
-    M: FloatProperty(
-        name="Molar mass",
-        default=0.0289645,
-        update=compute_speed
-    )
-
-    K: FloatProperty(
-        name="Bulk modulus",
-        default=0.0,
-        update=compute_speed
-    )
-
-    E: FloatProperty(
-        name="Young modulus",
-        default=0.0,
-        update=compute_speed
-    )
-
+#    def compute_speed(self, context):
+#       for world in bpy.data.worlds.values():
+#          if hasattr(world, 'pbraudio'):
+#             pbraudio = world.pbraudio
+#
+#       if pbraudio.type == 'GAS':
+#          pbraudio.sound_speed = sqrt((self.C_p/self.C_v)*(self.R_0/self.M)*(pbraudio.temperature+273.15))
+#       elif pbraudio.type == 'LIQUID':
+#          pbraudio.sound_speed = sqrt(self.K/pbraudio.density)
+#       elif pbraudio.type == 'SOLID':
+#          pbraudio.sound_speed = sqrt(self.E/pbraudio.density)
+#
+#       if self.outputs['Sound Speed'].is_linked:
+#          self.outputs['Sound Speed'].sound_speed = pbraudio.sound_speed
+#
+#    C_p: FloatProperty(
+#        name="Specific heat at constant pressure",
+#        default=7.0,
+#        update=compute_speed
+#    )
+#
+#    C_v: FloatProperty(
+#        name="Specific heat at constant volume",
+#        default=5.0,
+#        update=compute_speed
+#    )
+#
+#    R_0: FloatProperty(
+#        name="Gas constant",
+#        default=8.31446261815324,
+#        update=compute_speed
+#    )
+#
+#    M: FloatProperty(
+#        name="Molar mass",
+#        default=0.0289645,
+#        update=compute_speed
+#    )
+#
+#    K: FloatProperty(
+#        name="Bulk modulus",
+#        default=0.0,
+#        update=compute_speed
+#    )
+#
+#    E: FloatProperty(
+#        name="Young modulus",
+#        default=0.0,
+#        update=compute_speed
+#    )
+#
     def init(self, context):
         self.outputs.new('pbrAudioSoundSpeedNodeSocket', "Sound Speed")
-        self.inputs.new('pbrAudioTemperatureNodeSocket', "Temperature")
+        self.inputs.new('pbrAudioTemperatureNodeSocket', "Temperature in Celsius degree")
         self.inputs.new('pbrAudioDensityNodeSocket', "Density")
 
     def draw_buttons(self, context, layout):
@@ -104,14 +104,24 @@ class pbrAudioSoundSpeedNode(Node):
         layout.prop(pbraudio, "type", text='Type')
 
         if pbraudio.type == 'GAS':
-            layout.prop(self, "C_p", text='Cp', slider=True)
-            layout.prop(self, "C_v", text='Cv', slider=True)
-            layout.prop(self, "R_0", text='Ro', slider=True)
-            layout.prop(self, "M", text='M', slider=True)
+            layout.prop(pbraudio, "C_p", text='Cp: Specific heat at constant pressure', slider=True)
+            layout.prop(pbraudio, "C_v", text='Cv: Specific heat at constant volume', slider=True)
+            layout.prop(pbraudio, "R_0", text='Ro: Gas constant', slider=True)
+            layout.prop(pbraudio, "M", text='M: Molar Mass', slider=True)
         if pbraudio.type == 'LIQUID':
-            layout.prop(self, "K", text='K', slider=True)
+            layout.prop(pbraudio, "K", text='K: Bulk modulus', slider=True)
         if pbraudio.type == 'SOLID':
-            layout.prop(self, "E", text='E', slider=True)
+            layout.prop(pbraudio, "E", text='E: Young\'s modulus', slider=True)
+
+#        if pbraudio.type == 'GAS':
+#            layout.prop(self, "C_p", text='Cp: Specific heat at constant pressure', slider=True)
+#            layout.prop(self, "C_v", text='Cv: Specific heat at constant volume', slider=True)
+#            layout.prop(self, "R_0", text='Ro: Gas constant', slider=True)
+#            layout.prop(self, "M", text='M: Molar Mass', slider=True)
+#        if pbraudio.type == 'LIQUID':
+#            layout.prop(self, "K", text='K: Bulk modulus', slider=True)
+#        if pbraudio.type == 'SOLID':
+#            layout.prop(self, "E", text='E: Young\'s modulus', slider=True)
 
     def draw_label(self):
         return "Acoustic Medium"
@@ -176,7 +186,7 @@ class pbrAudioTemperatureNode(Node):
     bl_label = "Acoustic Temperature Parameters"
 
     def init(self, context):
-        self.outputs.new('pbrAudioTemperatureNodeSocket', "Temperature")
+        self.outputs.new('pbrAudioTemperatureNodeSocket', "Temperature in Celsius degree")
 
     def draw_buttons(self, context, layout):
         pass

@@ -48,7 +48,7 @@ class PBRAudioRenderEngine(RenderEngine):
     # Render methods
     def update(self, data, depsgraph):
         """Update render data"""
-        pass
+        self.report({'INFO'}, "pbrAudio rendering updated...")
 
     def render(self, depsgraph):
         """Main render method"""

@@ -1,6 +1,6 @@
 - in the Render tab:
   - properties to set the device (cpu, gpu)
-  - properties to configure graphical preview render engine to visualize result (EEVE, Cycle).
+  - properties to configure graphical preview to visualize result [openvdb with Cycle and material preset]
   - properties to configure audio preview and render in the Audio Sampling panel
   - properties to configure and start(with button) audio prebake in the Audio PreBake panel for physically based synthesis nodes (modal physical model, harmonic fluids)
   - properties to configure and start(with button) audio bake in the Audio Bake panel

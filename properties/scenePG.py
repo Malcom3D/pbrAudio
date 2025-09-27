@@ -18,7 +18,7 @@
 
 import bpy
 from bpy.types import PropertyGroup
-from bpy.props import EnumProperty, IntProperty, BoolProperty
+from bpy.props import EnumProperty, IntProperty, BoolProperty, StringProperty
 
 classes = []
 
@@ -32,6 +32,16 @@ class PBRAudioSceneProperties(PropertyGroup):
             self.sample_rate = 96000
         if 'ULTRA' in self.audio_quality:
             self.sample_rate = 192000
+
+    def set_preview_sample_rate(self, context):
+        if 'LOW' in self.preview_audio_quality:
+            self.preview_sample_rate = 24000
+        if 'MEDIUM' in self.preview_audio_quality:
+            self.preview_sample_rate = 48000
+        if 'HIGH' in self.preview_audio_quality:
+            self.preview_sample_rate = 96000
+        if 'ULTRA' in self.preview_audio_quality:
+            self.preview_sample_rate = 192000
 
     """Scene properties for pbrAudio"""
     device: EnumProperty(
@@ -59,14 +69,89 @@ class PBRAudioSceneProperties(PropertyGroup):
         name="Sample Rate",
         description="Audio sample rate in Hz",
         default=48000,
-        min=8000,
+        min=12000,
         max=192000
     )
 
-#    enable_realtime_audio: BoolProperty(
-#        name="Realtime Audio",
-#        description="Enable realtime audio processing",
-#        default=False
-#    )
+    output_path: StringProperty(
+        name="Output",
+        description="Path to save audio files",
+        subtype='FILE_PATH',
+        default='/tmp/'
+    )
 
+    file_format: EnumProperty(
+        name="File Format",
+        items=[
+            ('PCM', "WAV: PCM Waveform Audio File Format", "PCM Waveform Audio File Format"),
+            ('BWF', "WAV: Broadcast Wave Format", "Broadcast Wave Format"),
+        ],
+        default='PCM',
+    )
+
+    bit_depth: EnumProperty(
+        name="Bit Depth",
+        items=[
+            ('16BIT', "16 bit", "16-bit Depth per Channel"),
+            ('24BIT', "24 bit", "24-bit Depth per Channel"),
+            ('32BIT', "32 bit", "32-bit Depth per Channel"),
+        ],
+        default='24BIT',
+    )
+
+    enable_graphical_preview: BoolProperty(
+        name="Enable Graphical Preview",
+        description="Enable graphical preview",
+        default=False
+    )
+
+    enable_acoustic_preview: BoolProperty(
+        name="Enable Acoustic Preview",
+        description="Enable acoustic preview",
+        default=False
+    )
+
+    preview_sample_rate: IntProperty(
+        name="Sample Rate For Acoustic Preview",
+        description="Audio sample rate in Hz",
+        default=48000,
+        min=12000,
+        max=192000
+    )
+
+    preview_audio_quality: EnumProperty(
+        name="Audio Quality",
+        items=[
+            ('LOW', "Low", "Low quality, fast rendering"),
+            ('MEDIUM', "Medium", "Balanced quality and speed"),
+            ('HIGH', "High", "High quality, slow rendering"),
+            ('ULTRA', "Ultra", "Ultra quality, very slow rendering"),
+        ],
+        default='MEDIUM',
+        update=set_preview_sample_rate
+    )
+
+    bake: BoolProperty(
+        name="bake",
+        description="Baked prebaked sound",
+        default=False
+    )
+
+    prebake: BoolProperty(
+        name="bake",
+        description="Prebaked sound",
+        default=False
+    )
+
+    cache_path: StringProperty(
+        name="Cache",
+        description="Path to save cache files",
+        subtype='FILE_PATH',
+    )
+
+    cache_status: BoolProperty(
+        name="Cache Status",
+        description="True if cache is initialized",
+        default=False
+    )
 classes.append(PBRAudioSceneProperties)

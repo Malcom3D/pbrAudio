@@ -21,9 +21,9 @@ from bpy.utils import register_class, unregister_class
 
 classes = []
 
-from . import renderOT, materialOT, worldOT
+from . import renderOT, materialOT, worldOT, sceneOT
 
-for mod in (renderOT, materialOT, worldOT):
+for mod in (renderOT, materialOT, worldOT, sceneOT):
     classes += mod.classes
 
 def register():
