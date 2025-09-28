@@ -91,7 +91,7 @@ class PBRAUDIO_PT_cache_panel(Panel):
 
         scene = context.scene
 
-        layout.enabled = scene.pbraudio.cache_status
+        layout.enabled = not scene.pbraudio.cache_status
         layout.prop(scene.pbraudio, "cache_path")
 
 classes.append(PBRAUDIO_PT_cache_panel)

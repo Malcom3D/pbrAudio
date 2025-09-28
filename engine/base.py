@@ -18,6 +18,7 @@
 
 import bpy
 from bpy.types import RenderEngine
+from .config import pbrAudioConfigInit
 
 classes =  []
 
@@ -52,24 +53,41 @@ class PBRAudioRenderEngine(RenderEngine):
 
     def render(self, depsgraph):
         """Main render method"""
-        scene = depsgraph.scene
         self.report({'INFO'}, "pbrAudio rendering in progress...")
+        scene = depsgraph.scene
+        pbraudio_init = pbrAudioConfigInit()
 
-    # For viewport renders, this method gets called once at the start and
-    # whenever the scene or 3D viewport changes. This method is where data
-    # should be read from Blender in the same thread. Typically a render
-    # thread will be started to do the work while keeping Blender responsive.
-    def view_update(self, context, depsgraph):
-        """Update viewport"""
-        pass
+        # check cache tree
+        if not pbraudio_init.scene.pbraudio.cache_status:
+            pbraudio_init.create_cache()
 
-    # For viewport renders, this method is called whenever Blender redraws
-    # the 3D viewport. The renderer is expected to quickly draw the render
-    # with OpenGL, and not perform other expensive work.
-    # Blender will draw overlays for selection and editing on top of the
-    # rendered image automatically.
-    def view_draw(self, context, depsgraph):
-        """Draw viewport"""
-        pass
+        pbraudio_init.domain_config()
+        pbraudio_init.source_config()
+        pbraudio_init.output_config()
+        #pbraudio.init.object_config()
+        pbraudio_init.create_config()
+
+        if not pbraudio_init.scene.pbraudio.cache_status:
+            pbraudio_init.initZarr()
+            pbraudio_init.scene.pbraudio.cache_status = True
+
+        self.report({'INFO'}, "pbrAudio rendering end...")
+
+        # For viewport renders, this method gets called once at the start and
+        # whenever the scene or 3D viewport changes. This method is where data
+        # should be read from Blender in the same thread. Typically a render
+        # thread will be started to do the work while keeping Blender responsive.
+        def view_update(self, context, depsgraph):
+            """Update viewport"""
+            pass
+
+        # For viewport renders, this method is called whenever Blender redraws
+        # the 3D viewport. The renderer is expected to quickly draw the render
+        # with OpenGL, and not perform other expensive work.
+        # Blender will draw overlays for selection and editing on top of the
+        # rendered image automatically.
+        def view_draw(self, context, depsgraph):
+            """Draw viewport"""
+            pass
 
 classes.append(PBRAudioRenderEngine)
