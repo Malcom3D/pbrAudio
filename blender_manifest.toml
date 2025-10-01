@@ -52,6 +52,21 @@ wheels = [
    "./wheels/zarr-3.1.2-py3-none-any.whl",
    "./wheels/zarrs-0.2.0-cp311-abi3-manylinux_2_28_x86_64.whl",
    "./wheels/rich-14.1.0-py3-none-any.whl",
+   "./wheels/cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+   "./wheels/soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl",
+   "./wheels/llvmlite-0.45.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+   "./wheels/numba-0.62.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+   "./wheels/dask-2025.9.1-py3-none-any.whl",
+   "./wheels/click-8.3.0-py3-none-any.whl",
+   "./wheels/cloudpickle-3.1.1-py3-none-any.whl",
+   "./wheels/fsspec-2025.9.0-py3-none-any.whl",
+   "./wheels/toolz-1.0.0-py3-none-any.whl",
+   "./wheels/importlib_metadata-8.7.0-py3-none-any.whl",
+   "./wheels/zipp-3.23.0-py3-none-any.whl",
+   "./wheels/partd-1.4.2-py3-none-any.whl",
+   "./wheels/locket-1.0.0-py2.py3-none-any.whl",
+   "./wheels/pywavelets-1.9.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+   "./wheels/scipy-1.16.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
 ]
 
 # # Optional: add-ons can list which resources they will require:
