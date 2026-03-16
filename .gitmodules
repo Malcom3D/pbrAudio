@@ -1,0 +1,16 @@
+[submodule "pbrAudioShaders"]
+	path = pbrAudioShaders
+	url = https://github.com/Malcom3D/pbrAudioShaders.git
+	branch = main
+[submodule "pbrAudioRender"]
+	path = pbrAudioRender
+	url = https://github.com/Malcom3D/pbrAudioRender.git
+	branch = main
+[submodule "pbrAudioBlender"]
+	path = pbrAudioBlender
+	url = https://github.com/Malcom3D/pbrAudioBlender.git
+	branch = main
+[submodule "embreexFromBlender"]
+	path = embreexFromBlender
+	url = https://github.com/Malcom3D/embreexFromBlender.git
+	branch = main
