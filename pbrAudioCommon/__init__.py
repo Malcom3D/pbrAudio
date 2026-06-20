@@ -23,8 +23,8 @@ __description__ = "Common library and alternative packages for pbrAudio Suite"
 import os
 import sys
 
-from .lib.import_helper import np
+from .lib import import_helper
 
 __all__ = [
-     'np'
+     'import_helper'
 ]
