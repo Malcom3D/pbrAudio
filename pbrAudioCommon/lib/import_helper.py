@@ -31,12 +31,12 @@ def import_pbr_audio_numpy():
     Import numpy from the alternative packages path.
     Returns the numpy module with the correct version.
     """
-    if PBR_AUDIO_NUMPY_PATH not in sys.path:
-        sys.path.insert(0, ALT_PKGS_PATH)
-    
     # Remove any previously imported numpy to force reload
     if 'numpy' in sys.modules:
         del sys.modules['numpy']
+
+    if ALT_PKGS_PATH not in sys.path:
+        sys.path.insert(0, ALT_PKGS_PATH)
     
     import numpy as np
     return np
