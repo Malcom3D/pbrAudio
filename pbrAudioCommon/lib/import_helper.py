@@ -34,6 +34,7 @@ def import_pbr_audio_numpy():
     # Remove any previously imported numpy to force reload
     if 'numpy' in sys.modules:
         del sys.modules['numpy']
+    if np:
         del np
 
     if ALT_PKGS_PATH not in sys.path:
