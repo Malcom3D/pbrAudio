@@ -20,35 +20,10 @@ __version__ = "0.0.1"
 __author__ = "Malcom3D"
 __description__ = "Common library and alternative packages for pbrAudio Suite"
 
-#import os
-#import sys
-#from .lib import import_helper
-
-import sys
 import os
-import importlib
+import sys
 
-# Path to the custom numpy installation
-ALT_PKGS_PATH = 'alt_pkgs'
-
-def import_pbr_audio_numpy():
-    """
-    Import numpy from the alternative packages path.
-    Returns the numpy module with the correct version.
-    """
-    # Remove any previously imported numpy to force reload
-    if 'numpy' in sys.modules:
-        del sys.modules['numpy']
-
-    if ALT_PKGS_PATH not in sys.path:
-        sys.path.insert(0, ALT_PKGS_PATH)
-    
-    import numpy as np
-    return np
-
-# Global numpy instance for the pbrAudio suite
-np = import_pbr_audio_numpy()
-
+from .lib.import_helper import np
 
 __all__ = [
      'np'
