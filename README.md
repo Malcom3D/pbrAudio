@@ -12,7 +12,7 @@ Project Status & Roadmap
 | Component	       | Module            | Version | Current Status	   | Next Milestone |
 | :---                 |       :----:      | :----: |      :----:      |           ---: |
 | embreexFromBlender |	                   | 4.4.0  | Maintenance | Sync to new embreex version|
-| pbrAudioBlender   |                      | 0.2.1 | Alpha  	   | Sync with pbrAudioRender release  |
+| pbrAudioBlender   |                      | 0.2.3 | Alpha  	   | Sync with pbrAudioRender release  |
 | pbrAudioRender   | pbrAudioFDTD          | 0.9.1.7 |   Working Alpha (100%)      | Full Rewrite   |
 | pbrAudioRender   | pbrAudioRay          | 0.1.10 |   Alpha (80%)      | Beta release   |
 | pbrAudioShaders  | Physics revEngine | 0.2.34 | Alpha (90%)       | Beta release   |
