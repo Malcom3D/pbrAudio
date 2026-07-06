@@ -10,6 +10,10 @@
 	path = pbrAudioBlender
 	url = https://github.com/Malcom3D/pbrAudioBlender.git
 	branch = main
+[submodule "pbrAudioPostProcess"]
+	path = pbrAudioPostProcess
+	url = https://github.com/Malcom3D/pbrAudioPostProcess.git
+	branch = main
 [submodule "embreexFromBlender"]
 	path = embreexFromBlender
 	url = https://github.com/Malcom3D/embreexFromBlender.git
