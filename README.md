@@ -13,13 +13,15 @@ Project Status & Roadmap
 | :---                 |       :----:      | :----: |      :----:      |           ---: |
 | embreexFromBlender |	                   | 4.4.0  | Maintenance | Sync to new embreex version|
 | pbrAudioBlender   |                      | 0.2.3 | Alpha  	   | Sync with pbrAudioRender release  |
+| pbrAudioComon  |  | 0.2.36 | Alpha (90%)       | Beta release   |
 | pbrAudioRender   | pbrAudioFDTD          | 0.9.1.7 |   Working Alpha (100%)      | Full Rewrite   |
 | pbrAudioRender   | pbrAudioRay          | 0.1.10 |   Alpha (80%)      | Beta release   |
 | pbrAudioPostProcess   | postProces          | 0.0.3 |   Alpha (30%)      | Beta release   |
-| pbrAudioShaders  | Physics revEngine | 0.2.34 | Alpha (90%)       | Beta release   |
-| pbrAudioShaders  | Rigid Body	       | 0.2.34 | Alpha (90%)       | Beta release   |
+| pbrAudioDispersion   | objectDisperion          | 0.0.3 |   Alpha (30%)      | Beta release   |
+| pbrAudioShaders  | PhysicsSolver | 0.2.36 | Alpha (90%)       | Beta release   |
+| pbrAudioShaders  | rigidBody	       | 0.2.36 | Alpha (90%)       | Beta release   |
 | pbrAudioShaders  | Fracture 	       | 0.1.0 | Alpha (20%)       | Beta release   |
-| pbrAudioShaders  | ellipsoidalProxy  | 0.0.1 | Alpha (20%)       | Beta release   |
+| pbrAudioShaders  | ellipsoidalProxy  | 0.0.7 | Alpha (40%)       | Beta release   |
 | pbrAudioShaders  | Thin Shell        | 0.0.1 | Alpha (20%)       | Beta release   |
 | pbrAudioShaders  | groundSound       | 0.0.1 | Alpha (10%)       | Beta release   |
 | pbrAudioShaders  | crumplingSound    |  | WIP               | Alpha release  |
