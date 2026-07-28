@@ -28,6 +28,9 @@ np.set_printoptions(precision=decimals, floatmode='fixed', threshold=np.inf)
 
 from .core.entity_manager import EntityManager
 from .lib.functions import *
+from .lib.acoustic_shader import AcousticCoefficients, AcousticProperties, AcousticShader
+from .lib.filter import LinkwitzRileyFilter
+from .lib.interpolator import FrequencyInterpolator, Frequency3DInterpolator
 
 __all__ = [
     'EntityManager',
@@ -43,5 +46,11 @@ __all__ = [
     '_trilinear_interpolate',
     '_degrees_to_radians',
     '_compute_rayleigh_damping',
-    '_mono_to_bands'
+    '_mono_to_bands',
+    'LinkwitzRileyFilter',
+    'AcousticCoefficients',
+    'AcousticProperties',
+    'AcousticShader',
+    'FrequencyInterpolator',
+    'Frequency3DInterpolator'
 ]
