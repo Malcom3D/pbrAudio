@@ -36,6 +36,8 @@ class SystemConfig:
     # physicsSolver only
     collision_margin: float = 0.05
     samples_per_object: int = 1000
+    hi_res_face2face: bool = False
+    samples_per_face: int = 1000
     enable_denoiser: bool = False
     enable_trajectory_postprocess: bool = False
     # rigidBody only
