@@ -245,6 +245,7 @@ def _update_status(file_path: str, progress: Optional[int] = None):
     with open(file_path, 'w') as file:
         if not progress == None:
             file.write(f"{progress}")
+    return progress
 
 def _cartesian_to_spherical(x: float, y: float, z: float) -> Tuple[float, float, float]:
     """
