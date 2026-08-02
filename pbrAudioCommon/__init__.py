@@ -27,6 +27,7 @@ decimals = 18
 np.set_printoptions(precision=decimals, floatmode='fixed', threshold=np.inf)
 
 from .core.entity_manager import EntityManager
+from .utils.config import Config, SystemConfig, AcousticDomainConfig, SourceConfig, OutputConfig, ObjectConfig
 from .lib.acoustic_shader import AcousticCoefficients, AcousticProperties, AcousticShader
 from .lib.filter import LinkwitzRileyFilter
 from .lib.interpolator import FrequencyInterpolator, Frequency3DInterpolator
@@ -52,5 +53,11 @@ __all__ = [
     'AcousticProperties',
     'AcousticShader',
     'FrequencyInterpolator',
-    'Frequency3DInterpolator'
+    'Frequency3DInterpolator',
+    'Config',
+    'SystemConfig',
+    'AcousticDomainConfig',
+    'SourceConfig',
+    'OutputConfig',
+    'ObjectConfig'
 ]
