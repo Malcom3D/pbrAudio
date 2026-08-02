@@ -56,9 +56,6 @@ nts)
             phase = self.phases_interpolator.get_band_average(low_freq, high_freq)
         return coeff, phase
 
-#    remove self if uncommented
-#    @staticmethod
-#    @nb.njit(parallel=True, fastmath=True, cache=True)
     def get_bands_avg(self, freq_bands: List[Tuple[float, float]], num_points: int = 1000) -> Tuple[np.n
 darray, np.ndarray]:
         """
@@ -67,10 +64,18 @@ darray, np.ndarray]:
         n_bands = len(freq_bands)
         avg_coeffs = np.zeros((1,n_bands), dtype=np.float32)
         avg_phases = np.zeros((1,n_bands), dtype=np.float32)
+
         coeff_interp_func = self.coeffs_interpolator.interp_func
-        phase_interp_func = self.phases_interpolator.interp_func
+        phase_interp_func = None
+        if not self.phases == None:
+            phase_interp_func = self.phases_interpolator.interp_func
  
         # Process all bands in parallel
+        return _compute_band_averages(freq_bands, n_bands, num_points, coeff_interp_func, phase_interp_func, avg_coeffs, avg_phases)
+
+    @staticmethod
+    @nb.njit(parallel=True, fastmath=True, cache=True)
+    def _compute_band_averages(freq_bands: np.ndarray, n_bands: int, num_points: int, coeff_interp_func, phase_interp_func, avg_coeffs: np.ndarray, avg_phases: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         for i in nb.prange(n_bands):
             low_freq, high_freq = freq_bands[i]
 
@@ -83,20 +88,22 @@ darray, np.ndarray]:
                 freq = low_freq + t * (high_freq - low_freq)
                 
                 coeff_sum += coeff_interp_func(freq) if coeff_interp_func(freq) >= 0 else 0
-                phase_sum += phase_interp_func(freq)
+                if not phase_interp_func == None:
+                    phase_sum += phase_interp_func(freq)
             
             avg_coeffs[0][i] = coeff_sum / num_points
-            avg_phases[0][i] = phase_sum / num_points
+            if not phase_interp_func == None:
+                avg_phases[0][i] = phase_sum / num_points
         
         return avg_coeffs, avg_phases
 
 @dataclass
 class AcousticProperties:
     """Container for acoustic properties."""
-    absorption: Optional[AcousticCoefficients] = None
-    refraction: Optional[AcousticCoefficients] = None
-    reflection: Optional[AcousticCoefficients] = None
-    scattering: Optional[AcousticCoefficients] = None
+    absorption: Union[float, Optional[AcousticCoefficients]] = None
+    transmission: Union[float, Optional[AcousticCoefficients]] = None
+    reflection: Union[float, Optional[AcousticCoefficients]] = None
+    scattering: Union[float, Optional[AcousticCoefficients]] = None
 
 @dataclass
 class AcousticShader:
@@ -107,6 +114,8 @@ class AcousticShader:
     damping: float = None
     friction: float = None
     roughness: float = None
+    impedence: float = None
+    temperature: float = None
     low_frequency: float = 1.0
     high_frequency: float = 24000.0
     acoustic_properties: Optional[AcousticProperties] = field(default_factory=AcousticProperties)
