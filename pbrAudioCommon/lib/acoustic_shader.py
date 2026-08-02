@@ -18,8 +18,9 @@
 
 from dataclasses import dataclass, field
 from typing import Union, Optional, Any
-from typing import List
+from typing import List, Tuple
 import numpy as np
+import numba as nb
 
 from ..lib.interpolator import FrequencyInterpolator
 
@@ -43,8 +44,7 @@ class AcousticCoefficients:
         frequencies, coeffs = self.coeffs_interpolator.interpolate_band(low_freq, high_freq, num_points)
         phases = np.array([], dtype=np.float32)
         if not self.phases == None:
-            frequencies, phases = self.phases_interpolator.interpolate_band(low_freq, high_freq, num_poi
-nts)
+            frequencies, phases = self.phases_interpolator.interpolate_band(low_freq, high_freq, num_points)
         return frequencies, coeffs, phases
 
     def get_avg_coeffs(self, low_freq: Optional[float] = None, high_freq: Optional[float] = None) -> np.ndarray:
@@ -56,8 +56,7 @@ nts)
             phase = self.phases_interpolator.get_band_average(low_freq, high_freq)
         return coeff, phase
 
-    def get_bands_avg(self, freq_bands: List[Tuple[float, float]], num_points: int = 1000) -> Tuple[np.n
-darray, np.ndarray]:
+    def get_bands_avg(self, freq_bands: List[Tuple[float, float]], num_points: int = 1000) -> Tuple[np.ndarray, np.ndarray]:
         """
         Numba-accelerated SIMD computation of band averages with phases.
         """

@@ -27,10 +27,10 @@ decimals = 18
 np.set_printoptions(precision=decimals, floatmode='fixed', threshold=np.inf)
 
 from .core.entity_manager import EntityManager
-from .lib.functions import *
 from .lib.acoustic_shader import AcousticCoefficients, AcousticProperties, AcousticShader
 from .lib.filter import LinkwitzRileyFilter
 from .lib.interpolator import FrequencyInterpolator, Frequency3DInterpolator
+from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands
 
 __all__ = [
     'EntityManager',
