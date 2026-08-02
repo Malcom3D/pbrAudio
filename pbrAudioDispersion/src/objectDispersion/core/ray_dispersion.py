@@ -21,7 +21,7 @@ import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass, field
 
-from physicsSolver import EntityManager
+from pbrAudioCommon import EntityManager
 
 from ..lib.object_dispersion import ObjectDispersion
 from ..lib.dispersion_data import ObjectDispersionPattern
