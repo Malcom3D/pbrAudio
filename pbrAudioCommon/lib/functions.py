@@ -54,7 +54,7 @@ def _clear_mesh_rotation(vertices: np.ndarray, vertex_normals: np.ndarray, faces
     -----------
     vertices : np.ndarray
         Vertex positions (N, 3) in local coordinates
-    normals : np.ndarray
+    vertex_normals : np.ndarray
         Vertex normals (N, 3) in local coordinates
     faces : np.ndarray
         Face indices (M, 3)
@@ -62,7 +62,7 @@ def _clear_mesh_rotation(vertices: np.ndarray, vertex_normals: np.ndarray, faces
     Returns:
     --------
     Tuple[np.ndarray, np.ndarray, np.ndarray]
-        Transformed vertices, normals, and faces (faces unchanged)
+        Transformed vertices, vertex_normals, and faces (faces unchanged)
     """
     # Compute the centroid of the mesh
     centroid = np.mean(vertices, axis=0)
@@ -93,10 +93,10 @@ def _clear_mesh_rotation(vertices: np.ndarray, vertex_normals: np.ndarray, faces
     # Apply rotation to vertices
     rotated_vertices = (rotation_matrix @ centered_vertices.T).T
     
-    # Apply rotation to normals
-    # For normals, we use the inverse transpose of the rotation matrix
+    # Apply rotation to vertex_normals
+    # For vertex_normals, we use the inverse transpose of the rotation matrix
     # Since rotation matrices are orthogonal, inverse transpose = rotation matrix
-    rotated_normals = (rotation_matrix @ normals.T).T
+    rotated_normals = (rotation_matrix @ vertex_normals.T).T
     
     # Normalize the rotated normals
     norm_magnitudes = np.linalg.norm(rotated_normals, axis=1, keepdims=True)
