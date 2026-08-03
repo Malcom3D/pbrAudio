@@ -258,7 +258,7 @@ class LinkwitzRileyFilter:
         return filtered_audio, sample_rate
 
 # Numba-accelerated filter functions
-@nb.jit(nopython=True)
+@nb.njit(cache=True, parallel=True, fastmath=True)
 def apply_iir_filter_numba(signal: np.ndarray, b_coeffs: np.ndarray, 
                           a_coeffs: np.ndarray, zi: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """

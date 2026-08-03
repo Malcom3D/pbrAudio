@@ -339,7 +339,7 @@ def _cartesian_to_spherical(x: float, y: float, z: float) -> Tuple[float, float,
 
     return azimuth, elevation, radius
 
-@nb.jit(nopython=True)
+@nb.njit(parallel=True, fastmath=True, cache=True)
 def _trilinear_interpolate(field: np.ndarray, position: Tuple[float, float, float]) -> float:
     """Fast trilinear interpolation using numba"""
     i, j, k = position
@@ -526,3 +526,25 @@ def _mono_to_bands(audio_file: str, sample_rate: int, frequency_bands: List[Tupl
         multi_bands_audio[index] = filtered_audio
 
     return multi_bands_audio
+
+@nb.njit(parallel=True, fastmath=True, cache=True)
+def _compute_face_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
+    """Compute normals of all faces using numba."""
+    n_faces = faces.shape[0]
+    normals = np.zeros((n_faces, 3), dtype=np.float64)
+    
+    for i in nb.prange(n_faces):
+        v0 = vertices[faces[i, 0]]
+        v1 = vertices[faces[i, 1]]
+        v2 = vertices[faces[i, 2]]
+        
+        # Cross product
+        normal = np.cross(v1 - v0, v2 - v0)
+        norm = np.sqrt(normal[0]**2 + normal[1]**2 + normal[2]**2)
+        
+        if norm > 1e-10:
+            normals[i, 0] = normal[0] / norm
+            normals[i, 1] = normal[1] / norm
+            normals[i, 2] = normal[2] / norm
+    
+    return normals

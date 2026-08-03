@@ -36,7 +36,7 @@ from .lib.filter import LinkwitzRileyFilter
 from .lib.interpolator import FrequencyInterpolator, Frequency3DInterpolator
 from .lib.frequency_response import SpatialFrequencyResponse
 
-from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands
+from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands, _compute_face_normals
 
 __all__ = [
     'EntityManager',
@@ -66,5 +66,6 @@ __all__ = [
     '_trilinear_interpolate',
     '_degrees_to_radians',
     '_compute_rayleigh_damping',
-    '_mono_to_bands'
+    '_mono_to_bands',
+    '_compute_face_normals'
 ]
