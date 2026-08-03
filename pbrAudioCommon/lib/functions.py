@@ -22,20 +22,92 @@ def _mesh_to_obj(vertices: np.ndarray, normals: np.ndarray, faces: np.ndarray, o
         obj_file: Path where the output .obj file will be saved
     """
     # Create trimesh object
+    vertices, normals, faces = _clear_mesh_rotation(vertices=vertices, vertex_normals=normals, faces=faces)
     mesh = trimesh.Trimesh(vertices=vertices, vertex_normals=normals, faces=faces)
 
     # Create simplified convex hull for resonance model
     if resonance:
         try:
             simplified = mesh.simplify_quadric_decimation(percent=0.5, aggression=0)
-            if simplified.is_volume and simplified.is_watertight and simplified.is_winding_consistent:
-                simplified.export(f"{obj_file.removesuffix('.obj')}_resonance.obj", include_normals=True, file_type='obj')
+            if not simplified.is_volume or not simplified.is_watertight or not simplified.is_winding_consistent and simplified.is_empty:
+                simplified.fix_normals()
+                _ = simplified.fill_holes()
+                simplified = simplified.process(validate=True)
+                if simplified.is_volume and simplified.is_watertight and simplified.is_winding_consistent and not simplified.is_empty:
+                    simplified.export(f"{obj_file.removesuffix('.obj')}_resonance.obj", include_normals=True, file_type='obj')
         except: 
             pass
 
     # Export as obj
     mesh.export(obj_file, file_type='obj')
     return
+
+def _clear_mesh_rotation(vertices: np.ndarray, vertex_normals: np.ndarray, faces: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Align local mesh axis to global axis using rigid transformation matrix.
+    
+    This function computes the rotation matrix that aligns the mesh's principal
+    axes with the global coordinate axes (X, Y, Z) and applies it to both
+    vertices and normals.
+    
+    Parameters:
+    -----------
+    vertices : np.ndarray
+        Vertex positions (N, 3) in local coordinates
+    normals : np.ndarray
+        Vertex normals (N, 3) in local coordinates
+    faces : np.ndarray
+        Face indices (M, 3)
+        
+    Returns:
+    --------
+    Tuple[np.ndarray, np.ndarray, np.ndarray]
+        Transformed vertices, normals, and faces (faces unchanged)
+    """
+    # Compute the centroid of the mesh
+    centroid = np.mean(vertices, axis=0)
+    
+    # Center the vertices around the origin for PCA
+    centered_vertices = vertices - centroid
+    
+    # Compute the covariance matrix
+    covariance_matrix = np.cov(centered_vertices.T)
+    
+    # Perform eigendecomposition to find principal axes
+    eigenvalues, eigenvectors = np.linalg.eigh(covariance_matrix)
+    
+    # Sort eigenvectors by eigenvalue (descending order)
+    # This gives us the principal axes in order of importance
+    idx = np.argsort(eigenvalues)[::-1]
+    eigenvectors = eigenvectors[:, idx]
+    
+    # Ensure right-handed coordinate system
+    # The third axis should be the cross product of the first two
+    if np.linalg.det(eigenvectors) < 0:
+        eigenvectors[:, 2] = -eigenvectors[:, 2]
+    
+    # The rotation matrix that aligns principal axes with global axes
+    # This is the transpose of the eigenvectors matrix
+    rotation_matrix = eigenvectors.T
+    
+    # Apply rotation to vertices
+    rotated_vertices = (rotation_matrix @ centered_vertices.T).T
+    
+    # Apply rotation to normals
+    # For normals, we use the inverse transpose of the rotation matrix
+    # Since rotation matrices are orthogonal, inverse transpose = rotation matrix
+    rotated_normals = (rotation_matrix @ normals.T).T
+    
+    # Normalize the rotated normals
+    norm_magnitudes = np.linalg.norm(rotated_normals, axis=1, keepdims=True)
+    norm_magnitudes[norm_magnitudes == 0] = 1  # Avoid division by zero
+    rotated_normals = rotated_normals / norm_magnitudes
+    
+    # The faces remain unchanged since they are just indices
+    rotated_faces = faces
+    
+    return rotated_vertices, rotated_normals, rotated_faces
+
 
 def _acoustic_domain_mesh(config: Any) -> trimesh.Trimesh:
     """ Return the AcousticDomain as mesh """
