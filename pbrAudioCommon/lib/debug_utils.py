@@ -22,7 +22,7 @@ from typing import Any
 from dataclasses import dataclass
 
 @dataclass
-class DebugConfiguration:
+class DebugConfig:
     enabled: bool = False
     prefix: str = ""
     output: Any = sys.stdout

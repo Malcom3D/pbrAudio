@@ -16,7 +16,6 @@
 # along with pbrAudio.  If not, see <https://www.gnu.org/licenses/>.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import sys
 import json
 import numpy as np
 from typing import List, Dict, Any, Optional, Tuple, Union
@@ -59,6 +58,8 @@ class SystemConfig:
     lowest_frequency: float = 5
     higher_frequency: float = 24000.0 # Nyquist clock/2
     view_ray: bool = False
+    # Debug
+    debug: bool = False
 
 @dataclass
 class TrajectoryPostProcessConfig:
@@ -278,19 +279,12 @@ class AmbisonicRenderConfig:
     bit_depth: int = 32 # it's needed?
     path: str = "./exports/ambisonic/"
 
-@dataclass
-class DebugConfig:
-    enabled: bool = False
-    output: Any = sys.stdout
-    prefix: str = ""
-
 class Config:
     def __init__(self, config_file: str):
         with open(config_file, 'r') as f:
             self.data = json.load(f)
 
         self.system = SystemConfig(**self.data.get('system', {}))
-        self.debug = DebugConfig(**self.data.get('debug', {}))
         self.trajectory_postprocess = TrajectoryPostProcessConfig(**self.data.get('trajectory_postprocess', {}))
         self.denoiser = DenoiserConfig(**self.data.get('denoiser', {}))
         self.postprocess = PostProcessConfig(**self.data.get('postprocess', {}))
