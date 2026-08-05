@@ -43,6 +43,7 @@ class SystemConfig:
     # rigidBody only
     modal_modes: int = 20
     enable_postprocess: bool = False
+    enable_proxy_synth: bool = False
     # pbrAudioRay only
     start_frame: int = None
     end_frame: int = None

@@ -37,6 +37,7 @@ from .lib.interpolator import FrequencyInterpolator, Frequency3DInterpolator
 from .lib.frequency_response import SpatialFrequencyResponse
 from .lib.shape_properties import ShapeType, ShapeProperties
 from .lib.primitive_geometry import PrimitiveGeometry
+from .lib.score_data import ScoreEvent, ScoreTrack
 
 from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands, _compute_face_normals
 
@@ -59,6 +60,8 @@ __all__ = [
     'ShapeType',
     'ShapeProperties',
     'PrimitiveGeometry',
+    'ScoreEvent',
+    'ScoreTrack',
     '_mesh_to_obj',
     '_acoustic_domain_mesh',
     '_load_mesh',
