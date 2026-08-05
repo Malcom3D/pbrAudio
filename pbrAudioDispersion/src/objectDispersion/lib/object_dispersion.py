@@ -24,6 +24,7 @@ from scipy.spatial import ConvexHull
 
 from pbrAudioCommon import EntityManager
 from pbrAudioCommon import _parse_lib, _load_mesh
+from pbrAudioCommon import debug_print, set_debug, set_debug_prefix
 from physicsSolver.lib.trajectory_data import TrajectoryData
 from physicsSolver.lib.force_data import ContactType
 
@@ -39,6 +40,8 @@ class ObjectDispersion:
     
     def __post_init__(self):
         self.config = self.entity_manager.get('config')
+        set_debug(self.config.system.debug)
+        set_debug_prefix(self.__class__.__name__)
         self.cache_path = f"{self.config.system.cache_path}/dispersion"
         os.makedirs(self.cache_path, exist_ok=True)
         
@@ -122,7 +125,7 @@ class ObjectDispersion:
         lib_file = f"{cache_path}/dspsp/{obj_name}.lib"
         
         if not os.path.exists(lib_file):
-            print(f"Warning: Modal model not found for {obj_name}, using fallback")
+            debug_print(f"Warning: Modal model not found for {obj_name}, using fallback")
             return self._create_fallback_modal_data(config_obj)
         
         return _parse_lib(lib_file)
@@ -522,7 +525,7 @@ class ObjectDispersion:
         with open(filepath, 'wb') as f:
             pickle.dump(dispersion, f)
         
-        print(f"Saved dispersion pattern for {name} to {filepath}")
+        debug_print(f"Saved dispersion pattern for {name} to {filepath}")
     
     def load_dispersion(self, obj_name: str) -> Optional[ObjectDispersionPattern]:
         """Load dispersion pattern from cache."""

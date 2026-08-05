@@ -10,6 +10,7 @@ import soundfile as sf
 from typing import Any, Tuple, Optional, List, Union, Dict
 
 from ..lib.filter import LinkwitzRileyFilter
+from ..lib.debug_utils import debug_print, set_debug, set_debug_prefix
 
 def _mesh_to_obj(vertices: np.ndarray, normals: np.ndarray, faces: np.ndarray, obj_file: str, resonance: bool = False):
     """
@@ -419,7 +420,7 @@ def _degrees_to_radians(phase_coeffs, input_unit='auto'):
         else:
             # Default to radians if uncertain
             original_unit = 'radians'
-            print("Error: Could not auto-detect unit with certainty.")
+            debug_print("Error: Could not auto-detect unit with certainty.")
             return None
     else:
         original_unit = input_unit
@@ -508,7 +509,7 @@ def _mono_to_bands(audio_file: str, sample_rate: int, frequency_bands: List[Tupl
         if audio_data.shape[1] > 1:
             # Convert to mono by averaging channels
             audio_data = np.mean(audio_data, axis=1)
-            print(f"Warning: Multi-channel audio converted to mono")
+            debug_print(f"Warning: Multi-channel audio converted to mono")
 
     # align sample_rate
     if not sample_rate == sr:

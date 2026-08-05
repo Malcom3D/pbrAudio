@@ -41,6 +41,8 @@ from .lib.score_data import ScoreEvent, ScoreTrack
 
 from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands, _compute_face_normals
 
+from .lib.debug_utils import debug_print, set_debug, set_debug_prefix, set_debug_output
+
 __all__ = [
     'EntityManager',
     'Config',
@@ -62,6 +64,10 @@ __all__ = [
     'PrimitiveGeometry',
     'ScoreEvent',
     'ScoreTrack',
+    'debug_print',
+    'set_debug',
+    'set_debug_prefix',
+    'set_debug_output',
     '_mesh_to_obj',
     '_acoustic_domain_mesh',
     '_load_mesh',
