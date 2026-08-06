@@ -549,3 +549,37 @@ def _compute_face_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray
             normals[i, 2] = normal[2] / norm
     
     return normals
+
+def _adjust_for_fracture_shard(stop_samples, start_samples, sample_rate, sfps, config_obj1, config_obj2):
+    """Adjust sample range for fracture and shard events."""
+    fracture_frame1 = -1
+    if not config_obj1.fractured == False:
+        if stop_samples >= config_obj1.fractured >= start_samples:
+            fracture_frame1 = config_obj1.fractured - 1
+            fracture_frame1 *= sample_rate / sfps
+
+    fracture_frame2 = -1
+    if not config_obj2.fractured == False:
+        if stop_samples >= config_obj2.fractured >= start_samples:
+            fracture_frame2 = config_obj2.fractured - 1
+            fracture_frame2 *= sample_rate / sfps
+
+    is_shard_frame1 = -1
+    if not config_obj1.is_shard == False:
+        if stop_samples >= config_obj1.is_shard >= start_samples:
+            is_shard_frame1 = config_obj1.is_shard
+            is_shard_frame1 *= sample_rate / sfps
+
+    is_shard_frame2 = -1
+    if not config_obj2.is_shard == False:
+        if stop_samples >= config_obj2.is_shard  >= start_samples:
+            is_shard_frame2 = config_obj2.is_shard
+            is_shard_frame2 *= sample_rate / sfps
+
+    fracture_samples = min(fracture_frame1, fracture_frame2)
+    stop_samples = min(stop_samples, fracture_samples) if not fracture_samples == -1 else stop_samples
+
+    shard_samples = max(is_shard_frame1, is_shard_frame2)
+    start_samples = max(start_samples, shard_samples) if not shard_samples == -1 else start_samples
+
+    return start_samples, stop_samples
