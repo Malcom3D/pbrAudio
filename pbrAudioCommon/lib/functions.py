@@ -12,6 +12,15 @@ from typing import Any, Tuple, Optional, List, Union, Dict
 from ..lib.filter import LinkwitzRileyFilter
 from ..lib.debug_utils import debug_print, set_debug, set_debug_prefix
 
+def _abs_start_frame(obj_path: str, use_proxy_path: bool = True):
+    if use_proxy_path and obj_config.proxy_type is not False:
+        obj_path = f"{obj_config.obj_path}/proxy"
+    items = os.listdir(obj_path)
+    items = [x for x in items if x.endswith('.npz')]
+    filenames = sorted(items, key=lambda x: int(''.join(filter(str.isdigit, x))))
+    filename = filenames[0]
+    return int(filename.replace('.npz','').split('_')[-1])
+
 def _mesh_to_obj(vertices: np.ndarray, normals: np.ndarray, faces: np.ndarray, obj_file: str, resonance: bool = False):
     """
     Convert an npz mesh file to Wavefront OBJ format.

@@ -39,7 +39,7 @@ from .lib.shape_properties import ShapeType, ShapeProperties
 from .lib.primitive_geometry import PrimitiveGeometry
 from .lib.score_data import ScoreEvent, ScoreTrack
 
-from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands, _compute_face_normals, _adjust_for_fracture_shard
+from .lib.functions import _mesh_to_obj, _acoustic_domain_mesh, _load_mesh, _load_pose, _generate_band_frequencies, _euler_to_rotation_matrix, _parse_lib, _update_status, _cartesian_to_spherical, _trilinear_interpolate, _degrees_to_radians, _compute_rayleigh_damping, _mono_to_bands, _compute_face_normals, _adjust_for_fracture_shard, _abs_start_frame
 
 from .lib.debug_utils import debug_print, set_debug, set_debug_prefix, set_debug_output
 
@@ -82,5 +82,6 @@ __all__ = [
     '_compute_rayleigh_damping',
     '_mono_to_bands',
     '_compute_face_normals',
-    '_adjust_for_fracture_shard'
+    '_adjust_for_fracture_shard',
+    '_abs_start_frame'
 ]
