@@ -12,15 +12,6 @@ from typing import Any, Tuple, Optional, List, Union, Dict
 from ..lib.filter import LinkwitzRileyFilter
 from ..lib.debug_utils import debug_print, set_debug, set_debug_prefix
 
-def _abs_start_frame(obj_path: str, use_proxy_path: bool = True):
-    if use_proxy_path and obj_config.proxy_type is not False:
-        obj_path = f"{obj_config.obj_path}/proxy"
-    items = os.listdir(obj_path)
-    items = [x for x in items if x.endswith('.npz')]
-    filenames = sorted(items, key=lambda x: int(''.join(filter(str.isdigit, x))))
-    filename = filenames[0]
-    return int(filename.replace('.npz','').split('_')[-1])
-
 def _mesh_to_obj(vertices: np.ndarray, normals: np.ndarray, faces: np.ndarray, obj_file: str, resonance: bool = False):
     """
     Convert an npz mesh file to Wavefront OBJ format.
@@ -559,9 +550,21 @@ def _compute_face_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray
     
     return normals
 
-def _adjust_for_fracture_shard(stop_samples, start_samples, sample_rate, sfps, config_obj1, config_obj2):
+def _abs_start_frame(config_obj: Any, use_proxy_path: bool = True):
+    obj_path = config_obj.obj_path
+    if use_proxy_path and config_obj.proxy_type is not False:
+        obj_path = f"{config_obj.obj_path}/proxy"
+    items = os.listdir(obj_path)
+    items = [x for x in items if x.endswith('.npz')]
+    try:
+        filenames = sorted(items, key=lambda x: int(''.join(filter(str.isdigit, x))))
+        return int(filenames[0].replace('.npz','').split('_')[-1])
+    except:
+        return 0
+
+def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, config_obj1, config_obj2):
     """Adjust sample range for fracture and shard events."""
-    abs_start_frame = _abs_start_frame(config_obj1.obj_path)
+    abs_start_frame = _abs_start_frame(config_obj1)
 
     fracture_frame1 = -1
     if not config_obj1.fractured == False:
@@ -592,9 +595,9 @@ def _adjust_for_fracture_shard(stop_samples, start_samples, sample_rate, sfps, c
             is_shard_frame2 = is_shard_frame
 
     fracture_samples = min(fracture_frame1, fracture_frame2)
-    stop_samples = min(stop_samples, fracture_samples) if not fracture_samples == -1 else stop_samples
+    stop_samples = min(stop_samples, fracture_samples)
 
     shard_samples = max(is_shard_frame1, is_shard_frame2)
-    start_samples = max(start_samples, shard_samples) if not shard_samples == -1 else start_samples
+    start_samples = max(start_samples, shard_samples)
 
     return start_samples, stop_samples
