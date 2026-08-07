@@ -561,29 +561,35 @@ def _compute_face_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray
 
 def _adjust_for_fracture_shard(stop_samples, start_samples, sample_rate, sfps, config_obj1, config_obj2):
     """Adjust sample range for fracture and shard events."""
+    abs_start_frame = _abs_start_frame(config_obj1.obj_path)
+
     fracture_frame1 = -1
     if not config_obj1.fractured == False:
-        if stop_samples >= config_obj1.fractured >= start_samples:
-            fracture_frame1 = config_obj1.fractured - 1
-            fracture_frame1 *= sample_rate / sfps
+        fracture_frame = config_obj1.fractured - abs_start_frame
+        fracture_frame *= sample_rate / sfps
+        if stop_samples >= fracture_frame >= start_samples:
+            fracture_frame1 = fracture_frame
 
     fracture_frame2 = -1
     if not config_obj2.fractured == False:
-        if stop_samples >= config_obj2.fractured >= start_samples:
-            fracture_frame2 = config_obj2.fractured - 1
-            fracture_frame2 *= sample_rate / sfps
+        fracture_frame = config_obj2.fractured - abs_start_frame
+        fracture_frame *= sample_rate / sfps
+        if stop_samples >= fracture_frame >= start_samples:
+            fracture_frame2 = fracture_frame
 
     is_shard_frame1 = -1
     if not config_obj1.is_shard == False:
-        if stop_samples >= config_obj1.is_shard >= start_samples:
-            is_shard_frame1 = config_obj1.is_shard
-            is_shard_frame1 *= sample_rate / sfps
+        is_shard_frame = config_obj1.is_shard - abs_start_frame
+        is_shard_frame *= sample_rate / sfps
+        if stop_samples >= is_shard_frame >= start_samples:
+            is_shard_frame1 = is_shard_frame
 
     is_shard_frame2 = -1
     if not config_obj2.is_shard == False:
-        if stop_samples >= config_obj2.is_shard  >= start_samples:
-            is_shard_frame2 = config_obj2.is_shard
-            is_shard_frame2 *= sample_rate / sfps
+        is_shard_frame = config_obj2.is_shard - abs_start_frame
+        is_shard_frame *= sample_rate / sfps
+        if stop_samples >= is_shard_frame >= start_samples:
+            is_shard_frame2 = is_shard_frame
 
     fracture_samples = min(fracture_frame1, fracture_frame2)
     stop_samples = min(stop_samples, fracture_samples) if not fracture_samples == -1 else stop_samples
