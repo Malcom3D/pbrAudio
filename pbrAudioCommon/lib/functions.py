@@ -568,36 +568,40 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
 
     fracture_frame1 = -1
     if not config_obj1.fractured == False:
-        fracture_frame = config_obj1.fractured - abs_start_frame
-        fracture_frame *= sample_rate / sfps
-        if stop_samples >= fracture_frame >= start_samples:
-            fracture_frame1 = fracture_frame
+        fracture_samples = (config_obj1.fractured - abs_start_frame) * sample_rate / sfps
+        if stop_samples >= fracture_samples >= start_samples:
+            fracture_samples1 = fracture_samples
+        elif start_samples > fracture_samples:
+            fracture_samples1 = start_samples
 
     fracture_frame2 = -1
     if not config_obj2.fractured == False:
-        fracture_frame = config_obj2.fractured - abs_start_frame
-        fracture_frame *= sample_rate / sfps
-        if stop_samples >= fracture_frame >= start_samples:
-            fracture_frame2 = fracture_frame
+        fracture_samples = (config_obj2.fractured - abs_start_frame) * sample_rate / sfps
+        if stop_samples >= fracture_samples >= start_samples:
+            fracture_samples2 = fracture_samples
+        elif start_samples < fracture_samples:
+            fracture_samples2 = start_samples
 
-    is_shard_frame1 = -1
+    shard_frame1 = -1
     if not config_obj1.is_shard == False:
-        is_shard_frame = config_obj1.is_shard - abs_start_frame
-        is_shard_frame *= sample_rate / sfps
-        if stop_samples >= is_shard_frame >= start_samples:
-            is_shard_frame1 = is_shard_frame
+        shard_samples = (config_obj1.is_shard - abs_start_frame) * sample_rate / sfps
+        if stop_samples >= shard_samples >= start_samples:
+            shard_samples1 = shard_samples
+        elif stop_samples < shard_samples:
+            shard_samples1 = stop_samples
 
-    is_shard_frame2 = -1
+    shard_frame2 = -1
     if not config_obj2.is_shard == False:
-        is_shard_frame = config_obj2.is_shard - abs_start_frame
-        is_shard_frame *= sample_rate / sfps
-        if stop_samples >= is_shard_frame >= start_samples:
-            is_shard_frame2 = is_shard_frame
+        shard_samples = (config_obj2.is_shard - abs_start_frame) * sample_rate / sfps
+        if stop_samples >= shard_samples >= start_samples:
+            shard_frame2 = shard_samples
+        elif stop_samples < shard_samples:
+            shard_samples2 = stop_samples
 
-    fracture_samples = min(fracture_frame1, fracture_frame2)
+    fracture_samples = min(fracture_samples1, fracture_samples2)
     stop_samples = min(stop_samples, fracture_samples)
 
-    shard_samples = max(is_shard_frame1, is_shard_frame2)
+    shard_samples = max(shard_samples1, shard_samples2)
     start_samples = max(start_samples, shard_samples)
 
     return start_samples, stop_samples
