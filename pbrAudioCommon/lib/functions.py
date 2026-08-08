@@ -550,21 +550,22 @@ def _compute_face_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray
     
     return normals
 
-def _abs_start_frame(config_obj: Any, use_proxy_path: bool = True):
+def _abs_start_frame(config_obj: Any):
     obj_path = config_obj.obj_path
-    if use_proxy_path and config_obj.proxy_type is not False:
-        obj_path = f"{config_obj.obj_path}/proxy"
     items = os.listdir(obj_path)
     items = [x for x in items if x.endswith('.npz')]
     try:
         filenames = sorted(items, key=lambda x: int(''.join(filter(str.isdigit, x))))
         return int(filenames[0].replace('.npz','').split('_')[-1])
     except:
+        # object is static
         return 0
 
 def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, config_obj1, config_obj2):
     """Adjust sample range for fracture and shard events."""
-    abs_start_frame = _abs_start_frame(config_obj1)
+    abs_start_frame1 = _abs_start_frame(config_obj1)
+    abs_start_frame2 = _abs_start_frame(config_obj2)
+    abs_start_frame = abs_start_frame1 if not abs_start_frame1 == 0 else abs_start_frame2
 
     fracture_samples1 = -1
     if not config_obj1.fractured == False:
