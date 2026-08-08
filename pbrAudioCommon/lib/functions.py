@@ -605,3 +605,17 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
     start_samples = max(start_samples, shard_samples)
 
     return start_samples, stop_samples
+
+def _is_object_active_at_frame(obj_config, frame: float) -> bool:
+    """
+    Determine if an object is active at a given frame.
+    """
+    # Fractured object: inactive after its fracture frame
+    if obj_config.fractured is not False:
+        if frame >= obj_config.fractured:
+            return False
+    # Shard object: inactive before its start frame
+    if obj_config.is_shard is not False:
+        if frame < obj_config.is_shard:
+            return False
+    return True
