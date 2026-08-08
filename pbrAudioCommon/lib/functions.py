@@ -550,28 +550,14 @@ def _compute_face_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray
     
     return normals
 
-def _abs_start_frame(config_obj: Any):
-    obj_path = config_obj.obj_path
-    items = os.listdir(obj_path)
-    items = [x for x in items if x.endswith('.npz')]
-    try:
-        filenames = sorted(items, key=lambda x: int(''.join(filter(str.isdigit, x))))
-        return int(filenames[0].replace('.npz','').split('_')[-1])
-    except:
-        # object is static
-        return 0
-
 def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, config_obj1, config_obj2):
     """Adjust sample range for fracture and shard events."""
     if config_obj1.fractured == False and config_obj2.fractured == False and config_obj1.is_shard == False and config_obj2.is_shard == False:
         return start_samples, stop_samples
 
-    # ToDo: handle static-static to static-shards?
-    abs_start_frame = max(_abs_start_frame(config_obj1), _abs_start_frame(config_obj2))
-
     fracture_samples1 = stop_samples
     if not config_obj1.fractured == False:
-        fracture_samples = (config_obj1.fractured - abs_start_frame) * sample_rate / sfps
+        fracture_samples = config_obj1.fractured * sample_rate / sfps
         if stop_samples >= fracture_samples >= start_samples:
             fracture_samples1 = fracture_samples
         elif start_samples > fracture_samples:
@@ -579,7 +565,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
 
     fracture_samples2 = stop_samples
     if not config_obj2.fractured == False:
-        fracture_samples = (config_obj2.fractured - abs_start_frame) * sample_rate / sfps
+        fracture_samples = config_obj2.fractured * sample_rate / sfps
         if stop_samples >= fracture_samples >= start_samples:
             fracture_samples2 = fracture_samples
         elif start_samples < fracture_samples:
@@ -587,7 +573,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
 
     shard_samples1 = start_samples
     if not config_obj1.is_shard == False:
-        shard_samples = (config_obj1.is_shard - abs_start_frame) * sample_rate / sfps
+        shard_samples = config_obj1.is_shard * sample_rate / sfps
         if stop_samples >= shard_samples >= start_samples:
             shard_samples1 = shard_samples
         elif stop_samples < shard_samples:
@@ -595,7 +581,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
 
     shard_samples2 = start_samples
     if not config_obj2.is_shard == False:
-        shard_samples = (config_obj2.is_shard - abs_start_frame) * sample_rate / sfps
+        shard_samples = config_obj2.is_shard * sample_rate / sfps
         if stop_samples >= shard_samples >= start_samples:
             shard_frame2 = shard_samples
         elif stop_samples < shard_samples:
@@ -608,17 +594,3 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
     start_samples = max(start_samples, shard_samples)
 
     return start_samples, stop_samples
-
-def _is_object_active_at_frame(obj_config, frame: float) -> bool:
-    """
-    Determine if an object is active at a given frame.
-    """
-    # Fractured object: inactive after its fracture frame
-    if obj_config.fractured is not False:
-        if frame >= obj_config.fractured:
-            return False
-    # Shard object: inactive before its start frame
-    if obj_config.is_shard is not False:
-        if frame < obj_config.is_shard:
-            return False
-    return True
