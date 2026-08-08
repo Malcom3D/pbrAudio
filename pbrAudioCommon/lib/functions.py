@@ -566,7 +566,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
     """Adjust sample range for fracture and shard events."""
     abs_start_frame = _abs_start_frame(config_obj1)
 
-    fracture_frame1 = -1
+    fracture_samples1 = -1
     if not config_obj1.fractured == False:
         fracture_samples = (config_obj1.fractured - abs_start_frame) * sample_rate / sfps
         if stop_samples >= fracture_samples >= start_samples:
@@ -574,7 +574,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
         elif start_samples > fracture_samples:
             fracture_samples1 = start_samples
 
-    fracture_frame2 = -1
+    fracture_samples2 = -1
     if not config_obj2.fractured == False:
         fracture_samples = (config_obj2.fractured - abs_start_frame) * sample_rate / sfps
         if stop_samples >= fracture_samples >= start_samples:
@@ -582,7 +582,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
         elif start_samples < fracture_samples:
             fracture_samples2 = start_samples
 
-    shard_frame1 = -1
+    shard_samples1 = -1
     if not config_obj1.is_shard == False:
         shard_samples = (config_obj1.is_shard - abs_start_frame) * sample_rate / sfps
         if stop_samples >= shard_samples >= start_samples:
@@ -590,7 +590,7 @@ def _adjust_for_fracture_shard(start_samples, stop_samples, sample_rate, sfps, c
         elif stop_samples < shard_samples:
             shard_samples1 = stop_samples
 
-    shard_frame2 = -1
+    shard_samples2 = -1
     if not config_obj2.is_shard == False:
         shard_samples = (config_obj2.is_shard - abs_start_frame) * sample_rate / sfps
         if stop_samples >= shard_samples >= start_samples:
