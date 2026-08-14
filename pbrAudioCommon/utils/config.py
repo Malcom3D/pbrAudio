@@ -405,6 +405,7 @@ class Config:
             impedence=shader_data.get('impedence', []),
             low_frequency=shader_data.get('low_frequency', 1.0),
             high_frequency=shader_data.get('high_frequency', 24000.0),
+            failure_stress=shader_data.get('failure_stress', []),
             acoustic_properties=acoustic_properties
         )
 
