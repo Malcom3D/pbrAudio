@@ -18,3 +18,11 @@
 	path = embreexFromBlender
 	url = https://github.com/Malcom3D/embreexFromBlender.git
 	branch = main
+[submodule "pbrAudioCommon"]
+	path = pbrAudioCommon
+	url = https://github.com/Malcom3D/pbrAudioCommon.git
+	branch = main
+[submodule "pbrAudioDispersion"]
+	path = pbrAudioDispersion
+	url = https://github.com/Malcom3D/pbrAudioDispersion.git
+	branch = main
