@@ -275,7 +275,7 @@ def _parse_lib(lib_content: str):
             t60_match = re.search(t60_pattern, line, re.DOTALL)
             if not t60_match == None:
                 t60_par_match = re.findall(parentesis_match, t60_match.group())
-                if not t60_par_match == None:
+                if not t60_par_match == None and t60_par_match[0] == 'n':
                     try:
                         t60_tuple_match = re.findall(tuple_match, t60_par_match[1])
                         if not t60_tuple_match == None:
@@ -284,6 +284,10 @@ def _parse_lib(lib_content: str):
                     except:
                         t60s = [1.0]
                         break
+                else:
+                    t60_tuple_match = re.findall(tuple_match, t60_par_match[0])
+                    if not t60_tuple_match == None:
+                        t60s = [float(f) for f in t60_tuple_match]
         for line in lines:
             # Extract nExPos
             nExPos_match = r'nExPos.*?=\s*(\d+)'
