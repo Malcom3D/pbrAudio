@@ -42,6 +42,7 @@ class SystemConfig:
     enable_trajectory_postprocess: bool = False
     # rigidBody only
     modal_modes: int = 20
+    voxel_size: float = 0.001
     enable_postprocess: bool = False
     enable_proxy_synth: bool = False
     # pbrAudioRay only
