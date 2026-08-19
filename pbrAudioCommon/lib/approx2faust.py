@@ -233,7 +233,17 @@ class Approx2Faust:
             t60s = t60s[valid_idx]
             n_modes = len(frequencies)
             if n_modes == 0:
-                return self._generate_empty_lib(output_name, min_freq, max_freq, metadata.get('n_voxels', 0))
+                material = modal_params['metadata']['material']
+                young_modulus = material['young_modulus']
+                poisson_ratio = material['poisson_ratio']
+                density = material['density']
+
+                freq_str, t60_str = (', '.join(['0' for _ in range(1)]) for i in range(2))
+                gain_waveform = (', '.join(['0' for _ in range(n_vertices)]))
+
+                header = f"Empty modal model for {output_name}"
+                generator = self.__class__.__name__
+                return _generate_lib(header=header, generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=n_vertices, min_freq=min_freq, max_freq=max_freq, freq_str=freq_str, t60_str=t60_str, gain_waveform=gain_waveform, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density)
         
         # Prepare frequency string
         freq_values = [f"{freq:.6f}" for freq in frequencies]
@@ -253,7 +263,7 @@ class Approx2Faust:
         for mode_idx in range(n_modes):
             mode_gains = gains[mode_idx, :]
             gain_str = ", ".join([f"{g:.6f}" for g in mode_gains])
-            gain_lines.append(f"        {gain_str}")
+            gain_lines.append(f"{gain_str}")
         gain_waveform = ", ".join(gain_lines)
 
         material = modal_params['metadata']['material']
