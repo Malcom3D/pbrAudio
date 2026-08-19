@@ -318,7 +318,7 @@ def _parse_lib(lib_content: str):
         'nModes': len(frequencies)
     }
 
-def _generate_lib(header: str, generator: str, lib_file: str, output_name: str, n_modes: int, n_vertices: int, t60_str: str, gain_waveform: str, min_freq: float = None, max_freq: float = None, freq_str: str, proxy_type: int = None, proxy_name: str = None) -> str:
+def _generate_lib(header: str, generator: str, lib_file: str, output_name: str, n_modes: int, n_vertices: int, t60_str: str, gain_waveform: str, freq_str: str, min_freq: float = None, max_freq: float = None, proxy_type: int = None, proxy_name: str = None) -> str:
 
     # Build the complete Faust lib content
     faust_lib = f"""
