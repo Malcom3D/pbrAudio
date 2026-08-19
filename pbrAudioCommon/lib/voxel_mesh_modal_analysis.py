@@ -25,6 +25,8 @@ from typing import Dict, List, Tuple, Optional, Any
 
 from ..lib.shape_properties import ShapeType, ShapeProperties
 
+from ..lib.debug_utils import debug_print, set_debug, set_debug_prefix
+
 class VoxelMeshModalAnalysis:
     def __init__(self, voxel_grid, voxel_size, material_properties):
         """
@@ -39,6 +41,10 @@ class VoxelMeshModalAnalysis:
         material_properties : dict
             Dictionary containing material properties
         """
+
+        set_debug(True)
+        set_debug_prefix(self.__class__.__name__)
+
         self.voxel_grid = np.array(voxel_grid, dtype=bool)
         self.nx, self.ny, self.nz = self.voxel_grid.shape
         
@@ -277,6 +283,7 @@ class VoxelMeshModalAnalysis:
         
         # Loop to increase k until we have enough modes in the desired range
         while True:
+            debug_print(f'Compute {k} eigenvalues')
             # Compute k eigenvalues (lowest frequencies) 
             try:
                 eigenvalues, eigenvectors = eigsh(
