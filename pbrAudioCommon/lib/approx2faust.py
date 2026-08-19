@@ -254,7 +254,7 @@ class Approx2Faust:
             mode_gains = gains[mode_idx, :]
             gain_str = ", ".join([f"{g:.6f}" for g in mode_gains])
             gain_lines.append(f"        {gain_str}")
-        gain_waveform = ",\n".join(gain_lines)
+        gain_waveform = ", ".join(gain_lines)
 
         material = modal_params['metadata']['material']
         young_modulus = material['young_modulus']
@@ -264,7 +264,7 @@ class Approx2Faust:
         header = f"Voxel approximated mesh modal model for {output_name}"
         generator = self.__class__.__name__
 
-        return _generate_lib(generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=n_vertices, min_freq=min_freq, max_freq=max_freq, freq_str=freq_str, t60_str=t60_str, gain_waveform=gain_waveform, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density)
+        return _generate_lib(header=header, generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=n_vertices, min_freq=min_freq, max_freq=max_freq, freq_str=freq_str, t60_str=t60_str, gain_waveform=gain_waveform, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density)
         
     def _generate_empty_lib(self, output_name: str, min_freq: float, 
                            max_freq: float, n_voxels: int) -> str:
