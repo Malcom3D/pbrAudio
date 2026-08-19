@@ -24,7 +24,7 @@ from enum import Enum
 
 from ..lib.voxel_mesh_modal_analysis import VoxelMeshModalAnalysis
 
-from ..lib.functions import _compute_rayleigh_damping, _save_lib
+from ..lib.functions import _compute_rayleigh_damping, _generate_lib
 from ..lib.primitive_geometry import PrimitiveGeometry
 
 @dataclass
