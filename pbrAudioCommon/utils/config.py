@@ -188,7 +188,7 @@ class ObjectConfig:
     static: bool
     stochastic_variation: bool = False
     proxy_type: Union[bool, int] = False # 0 = octahedron, 1 = icosahedron for < blender.proxy_size_threshold, 2,3,4 for low,mid,hi manual selection and icosahedron subdivision, 6 = ConvexHull 
-    min_detail_size: float = 0.01
+    min_detail_size: float = 0.01 # min detail size for convex hull proxy mesh
     ground: bool = False
     resonance: bool = False
     resonance_modes: int = 10
