@@ -276,7 +276,7 @@ class VoxelMeshModalAnalysis:
         sigma = (2 * np.pi * min_freq) ** 2
 
         # Maximum number of eigenvalues we are willing to compute (avoid excessive cost)
-        max_k = min(n_dofs - 1, 200)  # cap to avoid memory/time issues
+        max_k = min(n_dofs - 1, 100)  # cap to avoid memory/time issues
 
         # Start with a base number: at least n_modes + 20, but not more than max_k
         k = min(max(n_modes + 20, 50), max_k)
