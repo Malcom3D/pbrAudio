@@ -317,7 +317,7 @@ def _parse_lib(lib_content: str):
             'frequencies': np.array([]),
             't60s': np.array([]),
             'gains': np.array([]),
-            'nModes': frequencies.shape[0]
+            'nModes': 0
         }
     elif not len(frequencies) == len(t60s):
         if len(frequencies) > len(t60s):
@@ -331,18 +331,25 @@ def _parse_lib(lib_content: str):
         t60s = np.array(t60s)
 
     fg_ratio = float(len(gains)/frequencies.shape[0])
-    if not fg_ratio.is_integer():
+    if not fg_ratio.is_integer() and not np.floor(fg_ratio) == 0:
         n_gains = frequencies.shape[0] * int(np.floor(fg_ratio))
         gains = np.hsplit(np.array(gains)[:n_gains], int(np.floor(fg_ratio)))
+    elif fg_ratio.is_integer():
+        gains = np.hsplit(np.array(gains), len(gains)/frequencies.shape[0])
     else:
-        gains = np.hsplit(np.array(gains), len(gains)/len(frequencies))
-    nModes = len(frequencies)
+        return {
+            'frequencies': np.array([]),
+            't60s': np.array([]),
+            'gains': np.array([]),
+            'nModes': frequencies.shape[0]
+        }
+    nModes = frequencies.shape[0]
 
     return {
         'frequencies': frequencies,
         't60s': t60s,
         'gains': gains,
-        'nModes': frequencies.shape[0]
+        'nModes': nModes
     }
 
 def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_expos: int = None, n_modes: int = None, young_modulus: float = None, poisson_ratio: float = None, density: float = None, damping: float = None) -> str:
@@ -372,15 +379,15 @@ def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_ex
     freq = np.sort(np.random.uniform(min_freq, max_freq, size=(n_modes,)))
     for _ in range(n_modes):
         freq = np.sort(np.random.chisquare(df=freq, size=(n_modes)))
-    freq_str = str(tuple([float(freq[idx]) for idx in range(n_modes)]))
+    freq_str = str(tuple([float(freq[idx]) for idx in range(n_modes)])).replace(' ','').replace('(','').replace(')','')
 
     norm_rayl = np.array([])
     for _ in range(n_expos):
         rayl = np.random.rayleigh(scale=rayleigh_scale, size=(n_modes,))
         norm_rayl = np.append(norm_rayl, rayl/np.max(rayl))
-    gain_waveform = str(tuple([float(norm_rayl[idx]) for idx in range(norm_rayl.shape[0])]))
+    gain_waveform = str(tuple([float(norm_rayl[idx]) for idx in range(norm_rayl.shape[0])])).replace(' ','').replace('(','').replace(')','')
 
-    t60_str = str(tuple([float(np.linalg.norm(np.random.dirichlet(alpha=(density, min_freq, max_freq), size=20), axis=1)[idx]) for idx in range(n_modes)]))
+    t60_str = str(tuple([float(np.linalg.norm(np.random.dirichlet(alpha=(density, min_freq, max_freq), size=20), axis=1)[idx]) for idx in range(n_modes)])).replace(' ','').replace('(','').replace(')','')
   
     faust_lib = f"""// ------------------------------------------------------------
 // Fake modal model for {output_name}

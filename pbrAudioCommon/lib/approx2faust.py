@@ -98,7 +98,9 @@ class Approx2Faust:
                     'voxel_size': voxel_size,
                     'n_voxels': int(np.sum(modal_analysis.voxel_grid)),
                     'material': material_properties,
-                    'n_modes': 0
+                    'frequency_range': [float(min_freq), float(max_freq)],
+                    'n_modes': 0,
+                    'n_vertices': vertices.shape[0]
                 }
             }
         elif not len(frequencies) == n_modes:
@@ -217,19 +219,17 @@ class Approx2Faust:
         str
             Faust .lib file content
         """
-        frequencies = modal_params.get('frequencies', [])
-        gains = modal_params.get('gains', [[]])   # shape (n_modes, n_vertices)
-        t60s = modal_params.get('t60s', [])
-        metadata = modal_params.get('metadata', {})
+        frequencies = modal_params['frequencies']
+        gains = modal_params['gains']   # shape (n_modes, n_vertices)
+        t60s = modal_params['t60s']
+        metadata = modal_params['metadata']
         
         n_modes = len(frequencies)
-#        n_vertices = metadata.get('n_vertices', 0) if gains.shape[1] > 0 else 0
-        n_vertices = metadata.get('n_vertices', 0) if gains.ndim >= 2 else 0
+        n_vertices = metadata['n_vertices']
+        n_voxels = metadata['n_voxels']
         
         if n_modes == 0 or n_vertices == 0:
-            print(f"####################################### Warning: {output_name} own {n_vertices} vertices, {metadata['n_voxels']} voxels, {len(modal_params['frequencies'])} frequencies and {metadata['n_modes']} modes. Generating fake lib file.")
             return
-#            return _generate_empty_lib(output_name, min_freq, max_freq, metadata.get('n_voxels', 0))
         
         # Filter modes by frequency range if specified (already done in compute, but safe)
         valid_idx = np.where((frequencies >= min_freq) & (frequencies <= max_freq))[0]
