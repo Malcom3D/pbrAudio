@@ -311,16 +311,43 @@ def _parse_lib(lib_content: str):
                         gains = [1.0 for _ in range(nExPos)]
                         break
 
+    # validate data
+    if len(frequencies) == 0:
+        return {
+            'frequencies': np.array([]),
+            't60s': np.array([]),
+            'gains': np.array([]),
+            'nModes': frequencies.shape[0]
+        }
+    elif not len(frequencies) == len(t60s):
+        if len(frequencies) > len(t60s):
+            frequencies = np.array(frequencies)[:len(t60s)]
+            t60s = np.array(t60s)
+        elif len(t60s) > len(frequencies):
+            t60s = np.array(t60s)[:len(frequencies)]
+            frequencies = np.array(frequencies)
+    else:
+        frequencies = np.array(frequencies)
+        t60s = np.array(t60s)
+
+    fg_ratio = float(len(gains)/frequencies.shape[0])
+    if not fg_ratio.is_integer():
+        n_gains = frequencies.shape[0] * int(np.floor(fg_ratio))
+        gains = np.hsplit(np.array(gains)[:n_gains], int(np.floor(fg_ratio)))
+    else:
+        gains = np.hsplit(np.array(gains), len(gains)/len(frequencies))
+    nModes = len(frequencies)
+
     return {
-        'frequencies': np.array(frequencies),
-        't60s': np.array(t60s),
-        'gains': np.hsplit(np.array(gains), len(gains)/len(frequencies)),
-        'nModes': len(frequencies)
+        'frequencies': frequencies,
+        't60s': t60s,
+        'gains': gains,
+        'nModes': frequencies.shape[0]
     }
 
-def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_expos: int = None, n_modes: int = None) -> str:
+def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_expos: int = None, n_modes: int = None, young_modulus: float = None, poisson_ratio: float = None, density: float = None, damping: float = None) -> str:
     """
-    Generate empty Faust lib when no modes are found
+    Generate fake Faust lib when no modes are found
     
     Parameters: 
     -----------
@@ -340,10 +367,20 @@ def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_ex
     """
     n_expos = 1 if n_expos is None else n_expos
     n_modes = 1 if n_modes is None else n_modes
+    rayleigh_scale = damping * density * poisson_ratio
 
-    freq_str = str(tuple([float(np.random.uniform(min_freq, max_freq, size=(n_modes,))[idx]) for idx in range(n_modes)]))
-    gain_waveform = str(tuple([float(np.random.uniform(0, 1, size=(n_expos*n_modes,))[idx]) for idx in range(n_expos*n_modes)]))
-    t60_str = str(tuple([float(np.random.uniform(0, 0.1, size=(n_modes,))[idx]) for idx in range(n_modes)]))
+    freq = np.sort(np.random.uniform(min_freq, max_freq, size=(n_modes,)))
+    for _ in range(n_modes):
+        freq = np.sort(np.random.chisquare(df=freq, size=(n_modes)))
+    freq_str = str(tuple([float(freq[idx]) for idx in range(n_modes)]))
+
+    norm_rayl = np.array([])
+    for _ in range(n_expos):
+        rayl = np.random.rayleigh(scale=rayleigh_scale, size=(n_modes,))
+        norm_rayl = np.append(norm_rayl, rayl/np.max(rayl))
+    gain_waveform = str(tuple([float(norm_rayl[idx]) for idx in range(norm_rayl.shape[0])]))
+
+    t60_str = str(tuple([float(np.linalg.norm(np.random.dirichlet(alpha=(density, min_freq, max_freq), size=20), axis=1)[idx]) for idx in range(n_modes)]))
   
     faust_lib = f"""// ------------------------------------------------------------
 // Fake modal model for {output_name}
@@ -371,7 +408,7 @@ modeFreqsUnscaled = ba.take(n+1, {freq_str});
 modeFreqs(mode) = modeFreqsUnscaled(mode);
 
 // Mode gains (nModes x nExPos)
-modesGains = waveform{{0.0}};
+modesGains = waveform{{{gain_waveform}}};
 
 // T60 decay times (seconds)
 modesT60s = t60Scale : ba.take(nModes, {t60_str});
