@@ -227,8 +227,8 @@ class Approx2Faust:
         n_vertices = metadata.get('n_vertices', 0) if gains.ndim >= 2 else 0
         
         if n_modes == 0 or n_vertices == 0:
+            print(f'####################################### Warning: {output_name} own {n_vertices} vertices, {metadata.get('n_voxels',0)} voxels, {len(modal_params.get('frequencies', []))} frequencies and {metadata.get('n_modes',0} modes. Generating fake lib file')
             return
-#            print(f'Warning: {output_name} own {n_vertices} vertices and {n_modes} modes. Generating fake lib file')
 #            return _generate_empty_lib(output_name, min_freq, max_freq, metadata.get('n_voxels', 0))
         
         # Filter modes by frequency range if specified (already done in compute, but safe)
