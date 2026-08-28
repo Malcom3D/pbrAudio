@@ -26,6 +26,7 @@ from ..lib.frequency_response import SpatialFrequencyResponse
 
 @dataclass
 class SystemConfig:
+    physical_core: int = None
     sample_rate: int = 48000
     bit_depth: int = 32
     fps: int = 24 # video fps
