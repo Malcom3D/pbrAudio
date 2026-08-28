@@ -267,9 +267,6 @@ def _parse_lib(lib_content: str):
                 if not len(freq_tuple_match) == 0:
                     frequencies = [float(f) for f in freq_tuple_match]
                     break
-                else:
-                    frequencies = [1.0]
-                    break
         for line in lines:
             # Extract T60 values
             t60_match = re.search(t60_pattern, line, re.DOTALL)
@@ -282,7 +279,6 @@ def _parse_lib(lib_content: str):
                             t60s = [float(f) for f in t60_tuple_match]
                             break
                     except:
-                        t60s = [1.0]
                         break
                 else:
                     t60_tuple_match = re.findall(tuple_match, t60_par_match[0])
@@ -308,11 +304,10 @@ def _parse_lib(lib_content: str):
                     try:
                         gains = [float(f) for f in gain_tuple_match.split(",")]
                     except:
-                        gains = [1.0 for _ in range(nExPos)]
                         break
 
     # validate data
-    if len(frequencies) == 0:
+    if len(frequencies) == 0 or len(t60s) == 0 or len(gains) == 0:
         return {
             'frequencies': np.array([]),
             't60s': np.array([]),
