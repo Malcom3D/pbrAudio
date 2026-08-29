@@ -347,7 +347,219 @@ def _parse_lib(lib_content: str):
         'nModes': nModes
     }
 
-def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_expos: int = None, n_modes: int = None, young_modulus: float = None, poisson_ratio: float = None, density: float = None, damping: float = None) -> str:
+
+def _generate_physical_lib(vertices: np.ndarray, faces: np.ndarray, obj_file: str, young_modulus: float, poisson_ratio: float, density: float, damping: float, minmode: float, maxmode: float, expos: List[int], output_name: str, n_modes: int) -> str:
+    """
+    Generate a physically-plausible modal model using rules of thumb and analytical approximations for simple geometries.
+
+    Parameters: 
+    -----------
+    output_name : str
+        Name for the Faust output
+    min_freq : float
+        Minimum frequency
+    max_freq : float
+        Maximum frequency
+
+    Returns:
+    --------
+    str
+        Analytic approximated Faust .lib file content
+    """
+
+    # Calculate basic geometry properties
+    # Bounding box dimensions
+    b bbox_min = vertices.min(axis=0)
+    bbox_max = vertices.max(axis=0)
+    bbox_size = bbox_max - bbox_min
+
+    # Volume approximation using convex hull
+    try:
+        from scipy.spatial import ConvexHull
+        hull = ConvexHull(vertices)
+        volume = hull.volume
+        surface_area = hull.area
+    except:
+        # Fallback to bounding box volume
+        volume = np.prod(bbox_size)
+        surface_area = 2 * (bbox_size[0]*bbox_size[1] + bbox_size[1]*bbox_size[2] + bbox_size[0]*bbox_size[2])
+
+    # Mass
+    mass = density * volume
+
+    # Characteristic length (for scaling)
+    char_length = np.cbrt(volume)
+
+    # Calculate material properties
+    shear_modulus = young_modulus / (2 * (1 + poisson_ratio))
+    bulk_modulus = young_modulus / (3 * (1 - 2*poisson_ratio))
+
+    # Wave speeds
+    c_longitudinal = np.sqrt(young_modulus * (1 - poisson_ratio) / ((1 + poisson_ratio) * (1 - 2*poisson_ratio) * density))
+    c_shear = np.sqrt(shear_modulus / density)
+    c_surface = np.sqrt(young_modulus / (density * (1 - poisson_ratio**2)))
+
+    # Aspect ratios for geometry-dependent frequency scaling
+    aspect_ratios = bbox_size / char_length
+    aspect_ratio_factor = np.sqrt(np.mean(aspect_ratios**2))
+
+    # Generate modal frequencies using physical rules of thumb
+    frequencies = []
+
+    # Fundamental frequency approximations for different modes
+    # Based on vibration of plates, beams, and solid bodies
+
+    # Flexural modes (bending) - based on plate theory
+    # f = (alpha * h / (2*pi*L^2)) * sqrt(E/(12*rho*(1-nu^2)))
+    h = np.min(bbox_size)  # Thickness
+    L = np.max(bbox_size)  # Length
+    flexural_factor = h / (L**2) * np.sqrt(young_modulus / (12 * density * (1 - poisson_ratio**2)))
+
+    # Longitudinal modes
+    # f = n * c_longitudinal / (2*L)
+    longitudinal_factor = c_longitudinal / (2 * L)
+
+    # Torsional modes
+    # f = n * c_shear / (2*L) * geometric_factor
+    torsional_factor = c_shear / (2 * L) * aspect_ratio_factor
+
+    # Generate frequencies with physical spacing
+    for i in range(n_modes):
+        # Mode type based on index (alternate between flexural, longitudinal, torsional)
+        mode_type = i % 3
+        mode_order = i // 3 + 1
+
+        if mode_type == 0:  # Flexural
+            # Modal frequency increases with square of mode number
+            alpha = [1.875, 4.694, 7.855, 10.996, 14.137][min(mode_order-1, 4)]
+            f = alpha**2 * flexural_factor / (2 * np.pi)
+        elif mode_type == 1:  # Longitudinal
+            f = mode_order * longitudinal_factor
+        else:  # Torsional
+            f = mode_order * torsional_factor
+
+        # Add small geometric perturbation based on irregularity
+        # This accounts for non-ideal geometry
+        irregularity = np.random.uniform(0.95,  1.05)
+        f *= irregularity
+
+        # Ensure frequency is within bounds
+        f = np.clip(f, minmode, maxmode)
+        frequencies.append(f)
+
+    # Sort frequencies
+    frequencies = np.sort(frequencies)
+
+    # Generate mode shapes (normalized)
+    num_vertices = len(vertices)
+    mode_shapes = np.zeros((n_modes, num_vertices, 3))
+
+    # Use spherical harmonics-like patterns based on vertex positions
+    for i, f in enumerate(frequencies):
+        # Normalize vertex positions to [-1, 1]
+        normalized_pos = 2 * (vertices - bbox_min) / bbox_size - 1
+
+        # Generate mode shape using combinations of spatial harmonics
+        # This approximates the actual eigenmodes
+        kx = (i // 3 + 1) * np.pi / 2
+        ky = ((i + 1) // 3 + 1) * np.pi / 2
+        kz = ((i + 2) // 3 + 1) * np.pi / 2
+
+        # Different mode shapes for different mode types
+        if i % 3 == 0:
+            # Flexural-like mode (bending)
+            mode_shapes[i, :, 0] = np.sin(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1]) * \
+                                   np.cos(kz * normalized_pos[:, 2])
+            mode_shapes[i, :, 1] = np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.sin(ky * normalized_pos[:, 1]) * \
+                                   np.cos(kz * normalized_pos[:, 2])
+            mode_shapes[i, :, 2] = np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1]) * \
+                                   np.sin(kz * normalized_pos[:, 2])
+        elif i % 3 == 1:
+            # Longitudinal-like mode (compression)
+            mode_shapes[i, :, 0] = np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1]) * \
+                                   np.cos(kz * normalized_pos[:, 2])
+            mode_shapes[i, :, 1] = np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1]) * \
+                                   np.cos(kz * normalized_pos[:, 2])
+            mode_shapes[i, :, 2] = np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1]) * \
+                                   np.cos(kz * normalized_pos[:, 2])
+        else:
+            # Torsional-like mode (twisting)
+            mode_shapes[i, :, 0] = -normalized_pos[:, 2]] * \
+                                   np.sin(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1])
+            mode_shapes[i, :, 1] = normalized_pos[:, 2] * \
+                                   np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.sin(ky * normalized_pos[:, 1])
+            mode_shapes[i, :, 2] = np.cos(kx * normalized_pos[:, 0]) * \
+                                   np.cos(ky * normalized_pos[:, 1])
+
+        # Normalize mode shape
+        norm = np.linalg.norm(mode_shapes[i])
+        if norm > 0:
+            mode_shapes[i] /= norm
+
+    # Calculate modal mass (simplified - assuming uniform distribution)
+    modal_mass = np.ones(n_modes) * mass / n_modes
+
+    # Calculate damping ratios (based on typical material damping)
+    # Use Rayleigh damping model: alpha and beta coefficients
+    omega = 2 * np.pi * frequencies
+    alpha_rayleigh, beta_rayleigh = _compute_rayleigh_damping(frequencies[0], frequencies[-1], damping)
+
+    damping_ratios = (alpha_rayleigh / (2 * omega) + beta_rayleigh * omega / 2)
+
+    # Clamp damping to reasonable range
+    damping_ratios = np.clip(damping_ratios, 0.001, 0.05)
+
+    # Calculate T60 values from damping ratios
+    # T60 = 6.9078 / (2 * pi * f * damping_ratio)
+    # This is the time for the mode to decay by 60dB
+    t60s = 6.9078 / (2 * np.pi * frequencies * damping_ratios)
+    t60s = np.clip(t60s, 0.01, 10.0)  # Clamp to reasonable range
+
+    # Format frequencies string
+    freq_str = str(tuple([float(frequencies[idx]) for idx in range(n_modes)])).replace(' ','').replace('(','').replace(')','')
+
+    # Calculate gains for each mode and excitation point
+    gains = np.zeros((n_modes, len(expos)))
+    
+    # For each excitation point, calculate the gain based on mode shape amplitude
+    for exp_idx, exp_vertex in enumerate(expos):
+        for mode_idx in range(n_modes):
+            # Gain is proportional to the mode shape amplitude at the excitation point
+            # and inversely proportional to the modal mass
+            if exp_vertex < num_vertices:
+                mode_amplitude = np.linalg.norm(mode_shapes[mode_idx, exp_vertex])
+                gains[mode_idx, exp_idx] = mode_amplitude / np.sqrt(modal_mass[mode_idx])
+            else:
+                gains[mode_idx, exp_idx] = 0.0
+
+    # Normalize gains to reasonable range
+    if np.max(np.abs(gains)) > 0:
+        gains = gains / np.max(np.abs(gains)) * 0.5  # Scale to max 0.5
+
+    # Format gains as waveform string
+    # Flatten gains matrix to 1D array
+    gains_flat = gains.flatten()
+    gain_waveform = str(tuple([float(gains_flat[idx]) for idx in range(gains_flat.shape[0])])).replace(' ','').replace('(','').replace(')','')
+
+    # Format T60 string
+    t60_str = str(tuple([float(t60s[idx]) for idx in range(n_modes)])).replace(' ','').replace('(','').replace(')','')
+
+    header = f"Analytic approximated modal model fallback for {output_name}"
+
+    generator = "_generate_physical_lib"
+
+    return _generate_lib(header=header, generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=len(expos), t60_str=t60_str_str, gain_waveform=gain_waveform, freq_str=freq_str, min_freq=minmode, max_freq=maxmode, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density, damping=damping)
+
+
+def _generate_stochastic_lib(output_name: str, min_freq: float, max_freq: float, n_expos: int = None, n_modes: int = None, young_modulus: float = None, poisson_ratio: float = None, density: float = None, damping: float = None) -> str:
     """
     Generate stochastic Faust lib when other method do not found modes
     
@@ -365,7 +577,7 @@ def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_ex
     Returns:
     --------
     str
-        Empty Faust .lib file content
+        Stochastic Faust .lib file content
     """
     n_expos = 1 if n_expos is None else n_expos
     n_modes = 1 if n_modes is None else n_modes
@@ -384,9 +596,9 @@ def _generate_empty_lib(output_name: str, min_freq: float, max_freq: float, n_ex
 
     t60_str = str(tuple([float(np.linalg.norm(np.random.dirichlet(alpha=(density, min_freq, max_freq), size=20), axis=1)[idx]) for idx in range(n_modes)])).replace(' ','').replace('(','').replace(')','')
 
-    header = f"Fake modal model for {output_name}"
+    header = f"Stochastic modal model fallback for {output_name}"
 
-    generator = "stochastic modal model fallback mechanism"
+    generator = "_generate_stochastic_lib"
   
     return _generate_lib(header=header, generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=n_expos, t60_str=t60_str, gain_waveform=gain_waveform, freq_str=freq_str, min_freq=min_freq, max_freq=max_freq, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density, damping=damping)
 
