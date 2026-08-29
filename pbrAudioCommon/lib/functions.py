@@ -556,7 +556,7 @@ def _generate_physical_lib(vertices: np.ndarray, faces: np.ndarray, obj_file: st
 
     generator = "_generate_physical_lib"
 
-    return _generate_lib(header=header, generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=len(expos), t60_str=t60_str_str, gain_waveform=gain_waveform, freq_str=freq_str, min_freq=minmode, max_freq=maxmode, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density, damping=damping)
+    return _generate_lib(header=header, generator=generator, output_name=output_name, n_modes=n_modes, n_vertices=len(expos), t60_str=t60_str, gain_waveform=gain_waveform, freq_str=freq_str, min_freq=minmode, max_freq=maxmode, young_modulus=young_modulus, poisson_ratio=poisson_ratio, density=density, damping=damping)
 
 
 def _generate_stochastic_lib(output_name: str, min_freq: float, max_freq: float, n_expos: int = None, n_modes: int = None, young_modulus: float = None, poisson_ratio: float = None, density: float = None, damping: float = None) -> str:
