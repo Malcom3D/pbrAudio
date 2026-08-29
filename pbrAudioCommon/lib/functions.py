@@ -510,7 +510,7 @@ def _generate_physical_lib(vertices: np.ndarray, faces: np.ndarray, obj_file: st
     # Calculate damping ratios (based on typical material damping)
     # Use Rayleigh damping model: alpha and beta coefficients
     omega = 2 * np.pi * frequencies
-    alpha_rayleigh, beta_rayleigh = _compute_rayleigh_damping(frequencies[0], frequencies[-1], damping)
+    alpha_rayleigh, beta_rayleigh = _compute_rayleigh_damping(minmode, maxmode, damping)
 
     damping_ratios = (alpha_rayleigh / (2 * omega) + beta_rayleigh * omega / 2)
 
