@@ -369,7 +369,7 @@ def _generate_physical_lib(vertices: np.ndarray, faces: np.ndarray, obj_file: st
 
     # Calculate basic geometry properties
     # Bounding box dimensions
-    b bbox_min = vertices.min(axis=0)
+    bbox_min = vertices.min(axis=0)
     bbox_max = vertices.max(axis=0)
     bbox_size = bbox_max - bbox_min
 
