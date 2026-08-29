@@ -490,7 +490,7 @@ def _generate_physical_lib(vertices: np.ndarray, faces: np.ndarray, obj_file: st
                                    np.cos(kz * normalized_pos[:, 2])
         else:
             # Torsional-like mode (twisting)
-            mode_shapes[i, :, 0] = -normalized_pos[:, 2]] * \
+            mode_shapes[i, :, 0] = -normalized_pos[:, 2] * \
                                    np.sin(kx * normalized_pos[:, 0]) * \
                                    np.cos(ky * normalized_pos[:, 1])
             mode_shapes[i, :, 1] = normalized_pos[:, 2] * \
