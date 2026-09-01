@@ -21,3 +21,6 @@
 [submodule "pbrAudioCommon"]
 	path = pbrAudioCommon
 	url = https://github.com/Malcom3D/pbrAudioCommon.git
+[submodule "pbrAudioDispersion"]
+	path = pbrAudioDispersion
+	url = https://github.com/Malcom3D/pbrAudioDispersion.git
