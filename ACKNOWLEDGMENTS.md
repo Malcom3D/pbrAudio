@@ -1,6 +1,7 @@
 # Acknowledgments
+-----------------
 
-pbrAudio would not be possible without the help of these wonderful people.
+* pbrAudio is built by one developer, but would not be possible without the generous support of these wonderful people.*
 
 ## Supporters
 
@@ -12,4 +13,4 @@ pbrAudio would not be possible without the help of these wonderful people.
 
 ## Contributors
 
-This project benefited from AI contribution provided by ** [DeepSeek AI](https://www.deepseek.com/) **
+This project benefited from AI contribution provided by [DeepSeek AI](https://www.deepseek.com/)
