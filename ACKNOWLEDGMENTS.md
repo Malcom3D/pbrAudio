@@ -1,7 +1,7 @@
 # Acknowledgments
 -----------------
 
-* pbrAudio is built by one developer, but would not be possible without the generous support of these wonderful people.*
+# pbrAudio is built by one developer, but would not be possible without the generous support of these wonderful people.
 
 ## Supporters
 
