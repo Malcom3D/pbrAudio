@@ -10,6 +10,7 @@
 - **Maje**
 - **Doc**
 - **dflyerd**
+- **LelloK**
 
 ## Contributors
 
