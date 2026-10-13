@@ -11,7 +11,9 @@
 - **Doc**
 - **dflyerd**
 - **LelloK**
+- **MaasYazminRajap**
+- **DanieleFagnani**
 
 ## Contributors
 
-This project benefited from AI contribution provided by [DeepSeek AI](https://www.deepseek.com/)
+### This project benefited from AI contribution provided by [DeepSeek AI](https://www.deepseek.com/)
