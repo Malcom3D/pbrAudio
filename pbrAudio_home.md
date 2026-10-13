@@ -1,9 +1,4 @@
----
-title: "Home"
-slug: "front_page"
-date: "2026-03-17T15:18:40"
----
-![](https://pbraudio.org/wp-content/uploads/2026/07/0120.png)
+![](https://pbraudio.org/wp-content/uploads/2026/07/0120.png =50x50)
 
 [Ready To Ear Your Animation?](https://pbraudio.org/wp-content/uploads/2026/07/Dice.mp4)
 
