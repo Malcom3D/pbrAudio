@@ -1,0 +1,293 @@
+# Copyright (C) 2017 WordPress GitHub Sync
+# This file is distributed under the same license as the WordPress GitHub Sync package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WordPress GitHub Sync 2.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-github-sync\n"
+"POT-Creation-Date: 2017-07-02 22:16:47+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: helpers.php:14
+msgid "View this post on GitHub."
+msgstr ""
+
+#: helpers.php:34
+msgid "Edit this post on GitHub."
+msgstr ""
+
+#: helpers.php:81 helpers.php:96
+msgid "View this post on GitHub"
+msgstr ""
+
+#: helpers.php:90
+msgid "Edit this post on GitHub"
+msgstr ""
+
+#: lib/admin.php:40
+msgid "GitHub hostname"
+msgstr ""
+
+#: lib/admin.php:43
+msgid "The GitHub host to use. This only needs to be changed to support a GitHub Enterprise installation."
+msgstr ""
+
+#: lib/admin.php:48
+msgid "Repository"
+msgstr ""
+
+#: lib/admin.php:51
+msgid "The GitHub repository to commit to, with owner (<code>[OWNER]/[REPOSITORY]</code>), e.g., <code>github/hubot.github.com</code>. The repository should contain an initial commit, which is satisfied by including a README when you create the repository on GitHub."
+msgstr ""
+
+#: lib/admin.php:56
+msgid "Oauth Token"
+msgstr ""
+
+#: lib/admin.php:59
+msgid "A <a href='https://github.com/settings/tokens/new'>personal oauth token</a> with <code>public_repo</code> scope."
+msgstr ""
+
+#: lib/admin.php:64
+msgid "Webhook Secret"
+msgstr ""
+
+#: lib/admin.php:67
+msgid "The webhook's secret phrase. This should be password strength, as it is used to verify the webhook's payload."
+msgstr ""
+
+#: lib/admin.php:72
+msgid "Default Import User"
+msgstr ""
+
+#: lib/admin.php:75
+msgid "The fallback user for import, in case WordPress <--> GitHub Sync cannot find the committer in the database."
+msgstr ""
+
+#: lib/admin.php:108
+msgid "Export to GitHub started."
+msgstr ""
+
+#: lib/admin.php:115
+msgid "Export to GitHub failed with error:"
+msgstr ""
+
+#: lib/admin.php:122 lib/export.php:201 lib/export.php:235
+msgid "Export to GitHub completed successfully."
+msgstr ""
+
+#: lib/admin.php:129
+msgid "Import from GitHub started."
+msgstr ""
+
+#: lib/admin.php:136
+msgid "Import from GitHub failed with error:"
+msgstr ""
+
+#: lib/admin.php:143
+msgid "Import from GitHub completed successfully."
+msgstr ""
+
+#: lib/admin.php:154 views/options.php:9
+msgid "WordPress <--> GitHub Sync"
+msgstr ""
+
+#: lib/admin.php:155
+msgid "GitHub Sync"
+msgstr ""
+
+#: lib/cli.php:51 lib/cli.php:93
+msgid "Invalid user ID"
+msgstr ""
+
+#: lib/cli.php:57
+msgid "Starting full export to GitHub."
+msgstr ""
+
+#: lib/cli.php:62
+msgid "Exporting post ID to GitHub: %d"
+msgstr ""
+
+#: lib/cli.php:68
+msgid "Invalid post ID"
+msgstr ""
+
+#: lib/cli.php:98
+msgid "Starting import from GitHub."
+msgstr ""
+
+#: lib/cli.php:124
+msgid "Starting branch import."
+msgstr ""
+
+#: lib/cli.php:131
+msgid "Failed to import and cache branch with error: %s"
+msgstr ""
+
+#: lib/cli.php:138
+msgid "Successfully imported and cached commit %s from branch."
+msgstr ""
+
+#: lib/cli.php:150
+msgid "Successfully imported and cached commit %s."
+msgstr ""
+
+#: lib/client/base.php:67
+msgid "Method %s to endpoint %s failed with error: %s"
+msgstr ""
+
+#: lib/client/base.php:87
+msgid "WordPress-GitHub-Sync needs an auth token. Please update your settings."
+msgstr ""
+
+#: lib/client/base.php:96
+msgid "WordPress-GitHub-Sync needs a repository. Please update your settings."
+msgstr ""
+
+#: lib/client/base.php:105
+msgid "WordPress-GitHub-Sync needs a properly formed repository. Please update your settings."
+msgstr ""
+
+#: lib/client/base.php:144 lib/payload.php:84
+msgid "Sync branch not set. Filter `wpghs_sync_branch` misconfigured."
+msgstr ""
+
+#: lib/client/persist.php:23
+msgid "There were no changes, so no additional commit was added."
+msgstr ""
+
+#: lib/controller.php:40 lib/controller.php:98 lib/controller.php:130
+#: lib/controller.php:164 lib/controller.php:192
+msgid "%s : Semaphore is locked, import/export already in progress."
+msgstr ""
+
+#: lib/controller.php:47
+msgid "Failed to validate secret."
+msgstr ""
+
+#: lib/controller.php:57
+msgid "%s won't be imported. Error: %s"
+msgstr ""
+
+#: lib/controller.php:68
+msgid "%s won't be imported."
+msgstr ""
+
+#: lib/database.php:62
+msgid "Querying for supported posts returned no results."
+msgstr ""
+
+#: lib/database.php:88
+msgid "Post ID %s is not supported by WPGHS. See wiki to find out how to add support."
+msgstr ""
+
+#: lib/database.php:123
+msgid "Post for sha %s not found."
+msgstr ""
+
+#: lib/database.php:194
+msgid "Successfully saved posts."
+msgstr ""
+
+#: lib/database.php:256
+msgid "Post not found for path %s."
+msgstr ""
+
+#: lib/database.php:274
+msgid "Failed to delete post ID %d."
+msgstr ""
+
+#: lib/database.php:282
+msgid "Successfully deleted post ID %d."
+msgstr ""
+
+#: lib/database.php:373
+msgid "Commit user not found for email %s"
+msgstr ""
+
+#: lib/database.php:446
+msgid "No change for post ID %d."
+msgstr ""
+
+#: lib/database.php:454
+msgid "Successfully updated post ID %d."
+msgstr ""
+
+#: lib/export.php:258 lib/payload.php:95
+msgid "Commit message tag not set. Filter `wpghs_commit_msg_tag` misconfigured."
+msgstr ""
+
+#: lib/import.php:70
+msgid "Payload processed"
+msgstr ""
+
+#: lib/import.php:95
+msgid "Already synced this commit."
+msgstr ""
+
+#: lib/payload.php:46
+msgid "Maximum stack depth exceeded"
+msgstr ""
+
+#: lib/payload.php:49
+msgid "Underflow or the modes mismatch"
+msgstr ""
+
+#: lib/payload.php:52
+msgid "Unexpected control character found"
+msgstr ""
+
+#: lib/payload.php:55
+msgid "Syntax error, malformed JSON"
+msgstr ""
+
+#: lib/payload.php:58
+msgid "Malformed UTF-8 characters, possibly incorrectly encoded"
+msgstr ""
+
+#: lib/payload.php:61
+msgid "Unknown error"
+msgstr ""
+
+#: views/options.php:16
+msgid "Webhook callback"
+msgstr ""
+
+#: views/options.php:20
+msgid "Bulk actions"
+msgstr ""
+
+#: views/options.php:23
+msgid "Export to GitHub"
+msgstr ""
+
+#: views/options.php:26
+msgid "Import from GitHub"
+msgstr ""
+
+#: wp-github-sync.php:231
+msgid "To set up your site to sync with GitHub, update your <a href=\"%s\">settings</a> and click \"Export to GitHub.\""
+msgstr ""
+#. Plugin Name of the plugin/theme
+msgid "WordPress GitHub Sync"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/mAAdhaTTah/wordpress-github-sync"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "A WordPress plugin to sync content with a GitHub repository (or Jekyll site)."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "James DiGioia, Ben Balter"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://jamesdigioia.com"
+msgstr ""
