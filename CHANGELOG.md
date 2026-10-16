@@ -1,9 +1,12 @@
 
-## [v0.2.3] - 2026-10-16
+## [Unreleased] - 2026-10-16
 
-### Changed
-- Updated all core suite submodules (`pbrAudioBlender`, `pbrAudioRender`, `pbrAudioShaders`, `pbrAudioCommon`, `pbrAudioDispersion`, `pbrAudioSignals`, `pbrAudioStorage`, and `embreexFromBlender`).
-- Updated `README.md` to reference the project credits.
+No changes.
 
-### Removed
-- Removed legacy `pbrAudio_home.md` documentation file.
+## [Unreleased] - 2026-10-16
+
+No changes recorded.
+
+## [Unreleased] - 2026-10-16
+
+No changes.
