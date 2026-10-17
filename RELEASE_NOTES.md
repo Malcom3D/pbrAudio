@@ -1,3 +1,3 @@
-Welcome to the latest update! There are no new user-facing updates or changes included in this release.
+Welcome to this release! There are no new user-facing updates or changes included in this version.
 
 * No changes in this release.
