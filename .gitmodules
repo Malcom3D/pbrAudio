@@ -10,6 +10,10 @@
 	path = pbrAudioBlender
 	url = git@github.com:Malcom3D/pbrAudioBlender.git
 	branch = main
+[submodule "pbrAudioDAW"]
+	path = pbrAudioDAW
+	url = git@github.com:Malcom3D/pbrAudioDAW.git
+	branch = main
 [submodule "pbrAudioStorage"]
 	path = pbrAudioStorage
 	url = git@github.com:Malcom3D/pbrAudioStorage.git
