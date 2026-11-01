@@ -14,6 +14,7 @@
 - **LelloK**
 - **MaasYazminRajap**
 - **DanieleFagnani**
+- **Riccardo**
 
 ## Contributors
 
