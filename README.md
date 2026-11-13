@@ -36,10 +36,10 @@ Project Status & Roadmap
 | pbrAudioShaders  | paperSound        |  | WIP               | Alpha release  |
 | pbrAudioShaders  | shockWaveSound    |  | WIP               | Alpha release  |
 | pbrAudioShaders  | cartoonSound      |  | WIP               | Alpha release  |
-| pbrAudioDAW  | pbrAudioDAW | 0.0.1 | Alpha (10%)       | Beta release   |
+| pbrAudioDAW  | pbrAudioDAW | 0.0.2 | Alpha (10%)       | Beta release   | basic TUI are working with playback
 | pbrAudioDAW  | pbrAudioDAWgui | 0.0.1 | Alpha (10%)       | Beta release   |
-| pbrAudioDAW  | pbrAudioStorage | 0.1.0 | Alpha (70%)       | Beta release   |
-| pbrAudioDAW  | pbrAudioSignals | 0.0.3 | Alpha (40%)       | Beta release   |
+| pbrAudioDAW  | pbrAudioStorage | 0.2.1 | Alpha (95%)       | Beta release   |
+| pbrAudioDAW  | pbrAudioSignals | 0.0.18 | Alpha (60%)       | Beta release   |
 | pbrAudioDispersion   | objectDisperion          | 0.0.3 |   Alpha (30%)      | Beta release   |
 
 
