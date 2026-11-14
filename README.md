@@ -49,16 +49,35 @@ This project is licensed under the **GNU General Public License v3.0 or later**.
 
 See the [LICENSE](LICENSE) file for the full text.
 
+
 If you use this software in your research, please cite:
 
-
+```
 @software{pbrAudio,
   author = {Malcom3D},
   title = {pbrAudio: Physically Audio Synthesis},
   year = {2025},
   url = {https://github.com/malcom3d/pbrAudio}
 }
+```
+
+## Support pbrAudio
+
+pbrAudio is a solo, open-source framework that computes **physically-based sound from 3D animation** - rigid bodies, fractures, particles -
+and **renders it acoustically** for film, animation, and VFX pipelines.
+It is platform-independent and follows the VFX Reference Platform CY2025.
+Blender (≥4.5) ships as a reference integration.
+
+Every engine is free and open-source and will stay free.
+I'm developing this solo and am currently homeless.
+I need ~€500/month for living costs and compute to keep going.
+
+- Monthly support: https://github.com/sponsors/malcom3D
+- One-time: https://buymeacoffee.com/malcom3d.gpl
+- **Current milestone:** a unified, non-destructive audio-track storage (DAG-based) that lets one scene drive *billions* of tracks
+                         (required to listen to the sound of a single raindrop) shipping alongside a working TUI DAW.
+- Demo: [https://youtu.be/XeVP_T3gQYY?si=uz1qiA78J1SQ3UsW]
 
 ## Supporters & Credits
 
-Thanks to everyone who has supported pbrAudio! See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) and [CREDITS](CREDITS) for the full list.
+Thanks to everyone who has supported pbrAudio! See [ACKNOWLEDGMENTS](ACKNOWLEDGMENTS.md) and [CREDITS](CREDITS) for the full list.
