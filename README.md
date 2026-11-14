@@ -16,7 +16,7 @@ Project Status & Roadmap
 | pbrAudioRender   | pbrAudioRay          | 0.1.10 |   Alpha (80%)      | Beta release   |
 | pbrAudioRender   | pbrAudioFDTD          | 0.9.1.7 |   Working Alpha (100%)      | Full Rewrite   |
 | pbrAudioCommon  |  | 0.2.36 | Alpha (90%)       | Beta release   |
-| pbrAudioShaders  | ellipsoidalProxy  | 0.0.10 | Alpha (75%)       | Beta release   |
+| pbrAudioShaders  | ellipsoidalProxy  | 0.0.11 | Alpha (75%)       | Beta release   |
 | pbrAudioShaders  | physicsSolver | 0.2.39 | Beta (90%)       | RC release   |
 | pbrAudioShaders  | rigidBody	       | 0.2.36 | Beta (90%)       | RC release   |
 | pbrAudioShaders  | fractureSound 	       | 0.2.0 | Beta (40%)       | Beta release   |
