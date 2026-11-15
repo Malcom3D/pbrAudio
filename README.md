@@ -70,7 +70,7 @@ Blender (≥4.5) ships as a reference integration.
 
 Every engine is free and open-source and will stay free.
 I'm developing this solo and am currently homeless.
-I need ~€500/month for living costs and compute to keep going.
+I need ~€1000/month for living costs and compute to keep going.
 
 - Monthly support: https://github.com/sponsors/malcom3D
 - One-time: https://buymeacoffee.com/malcom3d.gpl
