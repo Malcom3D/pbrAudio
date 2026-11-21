@@ -1,9 +1,10 @@
 pbrAudio Suite
 ==============
 
-pbrAudio is a suite for artists and sound designers.
+pbrAudio is a suite for artists and sound designers to bridges the gap between 3D VFX and 3D SFX.
 It combines physically based sound synthesis to generate audio from 3D animations and acoustic sound wave propagation through 3D scenes.
-The suite is designed to work with any 3D software platform that support python3.11 and includes an addon for blender LTS 4.5.x.
+The framework pbrAudioRender computes **physically-based sound from 3D animation** (rigid bodies, fractures, particles, fluid, ...) for film, animation, and VFX pipelines.
+The suite is designed to work with any 3D software platform that follows the VFX Reference Platform CY2025 and includes an addon for blender LTS 4.5.x as a reference integration.
 
 
 Project Status & Roadmap
@@ -60,23 +61,6 @@ If you use this software in your research, please cite:
   url = {https://github.com/malcom3d/pbrAudio}
 }
 ```
-
-## Support pbrAudio
-
-pbrAudio is a solo, open-source framework that computes **physically-based sound from 3D animation** - rigid bodies, fractures, particles -
-and **renders it acoustically** for film, animation, and VFX pipelines.
-It is platform-independent and follows the VFX Reference Platform CY2025.
-Blender (≥4.5) ships as a reference integration.
-
-Every engine is free and open-source and will stay free.
-I'm developing this solo and am currently homeless.
-I need ~€1000/month for living costs and compute to keep going.
-
-- Monthly support: https://github.com/sponsors/malcom3D
-- One-time: https://buymeacoffee.com/malcom3d.gpl
-- **Current milestone:** a unified, non-destructive audio-track storage (DAG-based) that lets one scene drive *billions* of tracks
-                         (required to listen to the sound of a single raindrop) shipping alongside a working TUI DAW.
-- Demo: [https://youtu.be/XeVP_T3gQYY?si=uz1qiA78J1SQ3UsW]
 
 ## Supporters & Credits
 
