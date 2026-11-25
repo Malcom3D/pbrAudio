@@ -7,7 +7,7 @@
 
 - **M**
 - **RobbyPat**
-- **Maje**
+- **T**
 - **Doc**
 - **dflyerd**
 - **Francy**
